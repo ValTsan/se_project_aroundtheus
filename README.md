@@ -57,7 +57,7 @@ Below are some screenshots showcasing the key features of the project:
 
 You can view a live demo of the project on GitHub Pages: [Around The U.S. Live Demo](https://github.com/ValTsan/se_project_aroundtheus)
 
-You can also view a screen recording of the project on google Drive: [Around The U.S. Live Screen Recording](https://github.com/ValTsan/se_project_aroundtheus)
+You can also view a screen recording of the project on google Drive: [Around The U.S. Live Screen Recording](https://drive.google.com/file/d/1ybPtN9A--hHDLeV8DS0wJAhDjSL56qBE/view?usp=sharing)
 
 ## Figma
 
