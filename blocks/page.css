@@ -1,5 +1,4 @@
 .page {
-  overflow-x: hidden;
   font-family: Inter, Arial, Helvetica, sans-serif;
   background-color: black;
   color: white;
@@ -22,44 +21,9 @@
   margin: 0 auto;
 }
 
-@media screen and (max-width: 320px) {
-  .page__content {
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  .page__section {
-    max-width: calc(100% -19px);
-  }
-
-  .page__info {
-    width: 100%;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .page__content {
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  .page__section {
-    max-width: calc(100% -19px);
-  }
-
-  .page__info {
-    width: 100%;
-  }
-}
-
 @media screen and (max-width: 660px) {
-  .page__content {
-    align-items: center;
+  .page {
     justify-content: center;
-    padding: 0;
-  }
-
-  .page__info {
-    width: 100%;
+    align-items: center;
   }
 }

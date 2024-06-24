@@ -19,17 +19,6 @@
   margin: 0;
 }
 
-.card__list {
-  display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(auto-fit, 282px);
-  grid-gap: 20px 17px;
-  border-radius: 10px;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
 .card__image {
   width: 282px;
   height: 282px;
@@ -54,5 +43,5 @@
 
 .card__like-button:hover {
   cursor: pointer;
-  opacity: 60%;
+  opacity: 0.5;
 }
