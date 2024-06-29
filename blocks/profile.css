@@ -12,9 +12,6 @@
   row-gap: 16px;
   align-items: center;
   width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
   max-width: 415px;
 }
 
@@ -57,6 +54,7 @@
   margin: 0;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
   max-width: 373px;
 }
 
@@ -77,6 +75,10 @@
   line-height: 21.78px;
   text-align: left;
   margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 415px;
 }
 
 @media screen and (max-width: 770px) and (min-width: 661px) {
@@ -148,7 +150,6 @@
   }
 
   .profile__title {
-    font-weight: 500;
     line-height: 26.63px;
   }
 
