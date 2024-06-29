@@ -11,8 +11,11 @@
   column-gap: 18px;
   row-gap: 16px;
   align-items: center;
-  max-width: 415px;
   width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 415px;
 }
 
 .profile__edit-button {
@@ -140,8 +143,6 @@
 
 @media screen and (max-width: 480px) {
   .profile {
-    flex-direction: column;
-    max-width: 282px;
     min-height: 286px;
     padding: 42px 0 0;
   }
@@ -149,10 +150,15 @@
   .profile__title {
     font-weight: 500;
     line-height: 26.63px;
-    max-width: 196px;
   }
 
   .profile__add-button {
     max-width: 282px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .profile__add-button {
+    margin-bottom: 36px;
   }
 }
