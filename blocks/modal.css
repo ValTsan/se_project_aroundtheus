@@ -58,14 +58,14 @@
   line-height: 16.94px;
   font-weight: 400;
 }
-.form__name {
+.modal__form-name {
   border: none;
   border-bottom: 1px solid #000000;
   margin-bottom: 29.74px;
   padding-bottom: 13.26px;
 }
 
-.form__description {
+.modal__form-description {
   border: none;
   border-bottom: 1px solid #000000;
   margin-bottom: 48px;
@@ -103,11 +103,11 @@
     left: calc(100% + -28px);
   }
 
-  .form__name {
+  .modal__form-name {
     margin-bottom: 30px;
   }
 
-  .form__description {
+  .modal__form-description {
     margin-bottom: 45px;
   }
 }
