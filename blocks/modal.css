@@ -1,0 +1,113 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 19px;
+}
+
+.modal__opened {
+  display: flex;
+}
+
+.modal__container {
+  background-color: #fff;
+  padding: 34px 36px 36px 36px;
+  border-radius: 10px;
+  position: relative;
+  max-width: 430px;
+  width: 100%;
+  max-height: 330px;
+}
+
+.modal__close {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: calc(100% + 5px);
+  width: 40px;
+  height: 40px;
+  background-image: url(../images/close.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.modal__heading {
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 29.05px;
+  font-weight: 900;
+  color: #000;
+  margin: 0;
+  padding-bottom: 54px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 16.94px;
+  font-weight: 400;
+}
+.form__name {
+  border: none;
+  border-bottom: 1px solid #000000;
+  margin-bottom: 29.74px;
+  padding-bottom: 13.26px;
+}
+
+.form__description {
+  border: none;
+  border-bottom: 1px solid #000000;
+  margin-bottom: 48px;
+  padding-bottom: 13.26px;
+}
+
+.modal__button {
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 21.78px;
+  text-align: center;
+  background-color: #000;
+  border-radius: 2px;
+  padding: 20px;
+  transition: opacity 0.5s linear;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 660px) {
+  .modal__container {
+    padding: 25px 22px 25px 22px;
+  }
+  .modal__heading {
+    font-size: 18px;
+    line-height: 21.78px;
+    padding-bottom: 75px;
+  }
+
+  .modal__close {
+    width: 26px;
+    height: 26px;
+    bottom: calc(100% + 13.62px);
+    left: calc(100% + -28px);
+  }
+
+  .form__name {
+    margin-bottom: 30px;
+  }
+
+  .form__description {
+    margin-bottom: 45px;
+  }
+}
