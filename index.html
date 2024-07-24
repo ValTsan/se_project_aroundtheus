@@ -55,17 +55,17 @@
       <div class="modal__container">
         <button class="modal__close" id="close-modal-button"></button>
         <h3 class="modal__heading">Edit Profile</h3>
-        <form class="modal__form">
+        <form class="modal__form" id="profile-edit-form">
           <input
             type="text"
-            class="modal__form-name"
+            class="modal__input"
             name="title"
             id="profile-title-input"
             placeholder="Jacques Cousteau"
           />
           <input
             type="text"
-            class="modal__form-description"
+            class="modal__input"
             id="profile-description-input"
             name="description"
             placeholder="Explorer"
@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    <template id="card-template">
+    <template id="card-form">
       <li class="card">
         <img src="" alt="" class="card__image" />
         <div class="card__description">
