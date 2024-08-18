@@ -6,6 +6,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  position: relative;
 }
 
 .card__list {
@@ -51,7 +52,26 @@
   border: none;
 }
 
+.card__like-button_active {
+  background-image: url(../images/HeartLikedButton.svg);
+}
+
 .card__like-button:hover {
   cursor: pointer;
   opacity: 0.5;
+}
+
+.card__delete-button {
+  position: absolute;
+  background: transparent url(../images/Trash.svg) center no-repeat;
+  width: 18px;
+  height: 19.3px;
+  top: 18px;
+  right: 15px;
+  border: none;
+}
+
+.card__delete-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
 }

@@ -75,6 +75,15 @@
       </div>
     </div>
 
+    <div class="modal" id="preview-modal">
+      <div class="modal__container modal__container_preview">
+        <button class="modal__close preview-close-modal-button"></button>
+        <h3 class="modal__heading"></h3>
+        <img src="" alt="Preview Image" class="preview__image" />
+        <p class="preview__caption"></p>
+      </div>
+    </div>
+
     <div class="modal" id="profile-add-modal">
       <div class="modal__container">
         <button class="modal__close" id="close-modal-button"></button>
@@ -101,6 +110,11 @@
 
     <template id="card-form">
       <li class="card">
+        <button
+          class="card__delete-button"
+          type="button"
+          aria-label="Delete Button"
+        ></button>
         <img src="" alt="" class="card__image" />
         <div class="card__description">
           <h2 class="card__title"></h2>
