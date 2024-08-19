@@ -41,7 +41,6 @@
   left: calc(100% + 5px);
   width: 40px;
   height: 40px;
-  z-index: 1000;
   background-image: url(../images/close.svg);
   background-repeat: no-repeat;
   background-size: contain;
@@ -95,7 +94,7 @@
 
 .modal__container_preview {
   max-width: 75vw;
-  max-height: 75vw;
+  max-height: 75vh;
   height: auto;
   width: auto;
   border-radius: 10px;
@@ -106,18 +105,21 @@
 
 .modal__preview-image {
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 100%;
   object-fit: contain;
 }
 
-.modal__close preview-close-modal-button {
+.modal__close-preview-button {
   top: 0;
+  z-index: 1000;
 }
 
 @media screen and (max-width: 660px) {
   .modal__container {
     padding: 25px 22px 25px 22px;
   }
+
   .modal__heading {
     font-size: 18px;
     line-height: 21.78px;
