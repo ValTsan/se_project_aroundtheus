@@ -63,8 +63,8 @@ const addNewCardButton = document.querySelector(".profile__add-button");
 const closeButtons = document.querySelectorAll(".modal__close");
 
 // PREVIEW POP UP
-const previewImageModal = previewModal.querySelector(".modal__preview_image");
-const previewCaption = previewModal.querySelector(".modal__preview_caption");
+const previewImageModal = previewModal.querySelector(".modal__preview-image");
+const previewCaption = previewModal.querySelector(".modal__preview-caption");
 
 /* ------------------------------------------------- */
 /*                     Functions
