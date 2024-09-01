@@ -65,20 +65,23 @@
   font-weight: 400;
   max-width: 100%;
 }
-.modal__input:first-of-type {
+
+.modal__input:first-of-type,
+.modal__input:last-of-type,
+.modal__input {
   border: none;
   border-bottom: 1px solid #000000;
   margin-bottom: 29.74px;
   padding-bottom: 13.26px;
 }
 
-.modal__input:last-of-type {
-  border: none;
-  border-bottom: 1px solid #000000;
-  padding-bottom: 13.26px;
+.modal__input.modal__input_has-error {
+  border-bottom: 1px solid #ff0000;
+  margin-bottom: 0;
 }
 
-.modal__input_type_error {
+.modal__input:first-of-type.modal__input_has-error,
+.modal__input:last-of-type.modal__input_has-error {
   border-bottom: 1px solid #ff0000;
   margin-bottom: 0;
 }
