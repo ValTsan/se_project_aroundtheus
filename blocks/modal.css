@@ -1,4 +1,5 @@
 .modal {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -13,6 +14,16 @@
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.6s linear, visibility 0s linear 0.6s;
+}
+
+.modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 .modal_opened {
@@ -30,6 +41,7 @@
   max-width: 430px;
   width: 100%;
   max-height: 330px;
+  z-index: 2;
 }
 
 .modal__close {

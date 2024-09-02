@@ -70,6 +70,23 @@ const previewCaption = previewModal.querySelector(".modal__preview-caption");
 /*                     Functions
 /* ------------------------------------------------- */
 
+// ESC FUNCTION
+function addEscListener(modal) {
+  function escClose(event) {
+    if (event.key === "Escape") {
+      closePopup(modal);
+      document.removeEventListener("keydown", escClose);
+    }
+  }
+  document.addEventListener("keydown", escClose);
+}
+
+//OVERLAY FUNCTION
+function addOverlayListener(modal) {
+  const overlay = modal.querySelector(".modal__overlay");
+  overlay.addEventListener("click", () => closePopup(modal), { once: true });
+}
+
 // CLOSE FUNCTION
 function closePopup(modal) {
   modal.classList.remove("modal_opened");
@@ -78,6 +95,8 @@ function closePopup(modal) {
 // OPEN FUNCTION
 function openPopup(modal) {
   modal.classList.add("modal_opened");
+  addEscListener(modal);
+  addOverlayListener(modal);
 }
 
 // RENDER CARD
@@ -86,7 +105,7 @@ function renderCard(cardData, wrapper) {
   cardListEl.prepend(cardElement);
 }
 
-// PREVIEW/POPUP IMAGE FUNCTION
+// PREVIEW IMAGE FUNCTION
 function showPreview(imageSrc, imageAlt) {
   if (previewImageModal) {
     previewImageModal.src = imageSrc;
@@ -99,7 +118,7 @@ function showPreview(imageSrc, imageAlt) {
   }
 }
 
-// CARD TEMPLATE FUNCTION
+//CARD TEMPLATE FUNCTION
 function getCardElement(cardData) {
   const cardElement = cardTemplate.cloneNode(true);
   const cardImageEl = cardElement.querySelector(".card__image");
@@ -154,20 +173,18 @@ function handleAddCardFormSubmit(e) {
 /*                     Event Listeners
 /* ------------------------------------------------- */
 
-// PROFILE INFO ADDED
+//PROFILE INFO ADDED
 profileEditBtn.addEventListener("click", () => {
   profileTitleInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
   openPopup(profileEditModal);
 });
 
-// FORM LISTENERS
-
+//FORM LISTENERS
 profileEditForm.addEventListener("submit", handleProfileEditSubmit);
 addCardFormElement.addEventListener("submit", handleAddCardFormSubmit);
 
-// ADD NEW CARD
-
+//ADD NEW CARD
 addNewCardButton.addEventListener("click", () => openPopup(profileAddModal));
 
 initialCards.forEach((cardData) => renderCard(cardData, cardListEl));
