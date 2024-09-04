@@ -118,7 +118,7 @@ function openPopup(modal) {
 }
 
 // RENDER CARD
-function renderCard(cardData, wrapper) {
+function renderCard(cardData, wrapper, method = "prepend") {
   const cardElement = getCardElement(cardData);
   cardListEl.prepend(cardElement);
 }
