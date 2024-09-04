@@ -71,24 +71,31 @@ const previewCaption = previewModal.querySelector(".modal__preview-caption");
 /*                     Functions
 /* ------------------------------------------------- */
 
-// ESC FUNCTION
+//ESC FUNCTION
 function addEscListener(modal) {
-  function escClose(event) {
+  function closeModalOnEsc(event) {
     if (event.key === "Escape") {
       handleClose(modal);
     }
   }
+  document.addEventListener("keydown", closeModalOnEsc);
+  return closeModalOnEsc;
+}
 
-  document.addEventListener("keydown", escClose);
-
-  function handleClose(modal) {
-    if (modal) {
-      modal.classList.remove("modal_opened");
-      document.removeEventListener("keydown", escClose);
-    }
+//CLOSE MODAL FUNCTION
+function handleClose(modal) {
+  if (modal) {
+    modal.classList.remove("modal_opened");
+    document.removeEventListener("keydown", modal.closeModalOnEsc);
   }
+}
 
-  return handleClose;
+//OPEN MODAL FUNCTION
+function openModal(modal) {
+  if (modal) {
+    modal.classList.add("modal_opened");
+    modal.closeModalOnEsc = addEscListener(modal);
+  }
 }
 
 //OVERLAY FUNCTION
@@ -109,18 +116,13 @@ function closePopup(modal) {
 // OPEN FUNCTION
 function openPopup(modal) {
   modal.classList.add("modal_opened");
-  if (!modal.dataset.overlayListenerAdded) {
-    addOverlayListener(modal);
-    modal.dataset.overlayListenerAdded = "true";
-  }
-
   addEscListener(modal);
 }
 
 // RENDER CARD
-function renderCard(cardData, wrapper, method = "prepend") {
+function renderCard(cardData, wrapper = cardListEl, method = "prepend") {
   const cardElement = getCardElement(cardData);
-  cardListEl.prepend(cardElement);
+  wrapper[method](cardElement);
 }
 
 // PREVIEW IMAGE FUNCTION
@@ -210,15 +212,11 @@ initialCards.forEach((cardData) => renderCard(cardData, cardListEl));
 modals.forEach((modal) => {
   modal.addEventListener("mousedown", (evt) => {
     if (evt.target.classList.contains("modal__overlay")) {
-      closeModal(modal);
+      closePopup(modal);
     }
 
     if (evt.target.classList.contains("modal__close")) {
-      closeModal(modal);
+      closePopup(modal);
     }
   });
 });
-
-function closeModal(modal) {
-  modal.classList.remove("modal_opened");
-}
