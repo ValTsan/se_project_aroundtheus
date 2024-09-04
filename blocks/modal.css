@@ -85,7 +85,6 @@
 .modal__input {
   border: none;
   border-bottom: 1px solid #000000;
-  margin-bottom: 29.74px;
   padding-bottom: 13.26px;
 }
 
@@ -101,17 +100,18 @@
 }
 
 .modal__error {
-  display: none;
+  display: block;
   font-size: 12px;
   line-height: 15px;
   color: #ff0000;
   padding-bottom: 13px;
-  min-height: 30px;
+  height: 40px;
   box-sizing: border-box;
+  visibility: hidden;
 }
 
 .modal__error_visible {
-  display: block;
+  visibility: visible;
 }
 
 .modal__button {
