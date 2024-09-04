@@ -33,6 +33,7 @@ const initialCards = [
 const profileEditModal = document.querySelector("#profile-edit-modal");
 const profileAddModal = document.querySelector("#profile-add-modal");
 const previewModal = document.querySelector("#preview-modal");
+const modals = document.querySelectorAll(".modal");
 
 // PROFILE/EDIT FORM
 const profileEditForm = profileEditModal.querySelector("#profile-edit-form");
@@ -74,17 +75,30 @@ const previewCaption = previewModal.querySelector(".modal__preview-caption");
 function addEscListener(modal) {
   function escClose(event) {
     if (event.key === "Escape") {
-      closePopup(modal);
+      handleClose(modal);
+    }
+  }
+
+  document.addEventListener("keydown", escClose);
+
+  function handleClose(modal) {
+    if (modal) {
+      modal.classList.remove("modal_opened");
       document.removeEventListener("keydown", escClose);
     }
   }
-  document.addEventListener("keydown", escClose);
+
+  return handleClose;
 }
 
 //OVERLAY FUNCTION
 function addOverlayListener(modal) {
   const overlay = modal.querySelector(".modal__overlay");
-  overlay.addEventListener("click", () => closePopup(modal), { once: true });
+  if (overlay) {
+    overlay.addEventListener("click", () => {
+      closePopup(modal);
+    });
+  }
 }
 
 // CLOSE FUNCTION
@@ -95,8 +109,12 @@ function closePopup(modal) {
 // OPEN FUNCTION
 function openPopup(modal) {
   modal.classList.add("modal_opened");
+  if (!modal.dataset.overlayListenerAdded) {
+    addOverlayListener(modal);
+    modal.dataset.overlayListenerAdded = "true";
+  }
+
   addEscListener(modal);
-  addOverlayListener(modal);
 }
 
 // RENDER CARD
@@ -189,7 +207,18 @@ addNewCardButton.addEventListener("click", () => openPopup(profileAddModal));
 
 initialCards.forEach((cardData) => renderCard(cardData, cardListEl));
 
-closeButtons.forEach((button) => {
-  const popup = button.closest(".modal");
-  button.addEventListener("click", () => closePopup(popup));
+modals.forEach((modal) => {
+  modal.addEventListener("mousedown", (evt) => {
+    if (evt.target.classList.contains("modal__overlay")) {
+      closeModal(modal);
+    }
+
+    if (evt.target.classList.contains("modal__close")) {
+      closeModal(modal);
+    }
+  });
 });
+
+function closeModal(modal) {
+  modal.classList.remove("modal_opened");
+}

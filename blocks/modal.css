@@ -41,6 +41,8 @@
   max-width: 430px;
   width: 100%;
   max-height: 330px;
+  min-height: 330px;
+  overflow: hidden;
   z-index: 2;
 }
 
@@ -100,12 +102,15 @@
 
 .modal__error {
   display: none;
-}
-
-.modal__error_visible {
   font-size: 12px;
   line-height: 15px;
   color: #ff0000;
+  padding-bottom: 13px;
+  min-height: 30px;
+  box-sizing: border-box;
+}
+
+.modal__error_visible {
   display: block;
 }
 
@@ -121,7 +126,7 @@
   padding: 20px;
   transition: opacity 0.5s linear;
   cursor: pointer;
-  margin-top: 48px;
+  margin-top: 31px;
 }
 
 .modal__button_disabled {
@@ -143,7 +148,7 @@
 
 .modal__preview-image {
   width: 100%;
-  height: auto;
+  height: 540px;
   max-height: 100%;
   object-fit: contain;
 }

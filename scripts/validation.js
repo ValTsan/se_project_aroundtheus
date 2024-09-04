@@ -48,18 +48,16 @@ function toggleButtonState(inputEls, submitButton, { inactiveButtonClass }) {
 
 //EVENT LISTENERS
 function setEventListeners(formEl, config) {
-  const { inputSelector } = config;
+  const { inputSelector, submitButtonSelector } = config;
   const inputEls = [...formEl.querySelectorAll(inputSelector)];
-  const submitButton = formEl.querySelector(".modal__button");
+  const submitButton = formEl.querySelector(submitButtonSelector);
+
+  toggleButtonState(inputEls, submitButton, config);
+
   inputEls.forEach((inputEl) => {
     inputEl.addEventListener("input", (e) => {
       checkInputValidity(formEl, inputEl, config);
       toggleButtonState(inputEls, submitButton, config);
-    });
-
-    inputEl.addEventListener("invalid", (e) => {
-      e.preventDefault();
-      checkInputValidity(formEl, inputEl, config);
     });
   });
 }
