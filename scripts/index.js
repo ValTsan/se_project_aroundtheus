@@ -85,7 +85,7 @@ function addEscListener(modal) {
 //CLOSE MODAL FUNCTION
 function handleClose(modal) {
   if (modal) {
-    modal.classList.remove("modal_opened");
+    closeModal(modal);
   }
 }
 
@@ -98,14 +98,9 @@ function openModal(modal) {
 }
 
 // CLOSE FUNCTION
-function closePopup(modal) {
+function closeModal(modal) {
   modal.classList.remove("modal_opened");
   document.removeEventListener("keydown", modal.closeModalOnEsc);
-}
-
-// OPEN FUNCTION
-function openPopup(modal) {
-  openModal(modal);
 }
 
 // RENDER CARD
@@ -121,7 +116,7 @@ function showPreview(imageSrc, imageAlt) {
     previewImageModal.alt = imageAlt;
     previewCaption.textContent = imageAlt;
 
-    openPopup(previewModal);
+    openModal(previewModal);
   } else {
     console.error("previewImageModal not found.");
   }
@@ -165,7 +160,7 @@ function handleProfileEditSubmit(e) {
   profileTitle.textContent = profileTitleInput.value;
   profileDescription.textContent = profileDescriptionInput.value;
 
-  closePopup(profileEditModal);
+  closeModal(profileEditModal);
 }
 
 // ADD IMAGE HANDLER
@@ -175,7 +170,7 @@ function handleAddCardFormSubmit(e) {
   const link = imageLinkInput.value;
   renderCard({ name, link });
   e.target.reset();
-  closePopup(profileAddModal);
+  closeModal(profileAddModal);
 }
 
 /* ------------------------------------------------- */
@@ -201,11 +196,11 @@ initialCards.forEach((cardData) => renderCard(cardData));
 modals.forEach((modal) => {
   modal.addEventListener("mousedown", (evt) => {
     if (evt.target.classList.contains("modal__overlay")) {
-      closePopup(modal);
+      closeModal(modal);
     }
 
     if (evt.target.classList.contains("modal__close")) {
-      closePopup(modal);
+      closeModal(modal);
     }
   });
 });
