@@ -86,7 +86,6 @@ function addEscListener(modal) {
 function handleClose(modal) {
   if (modal) {
     modal.classList.remove("modal_opened");
-    document.removeEventListener("keydown", modal.closeModalOnEsc);
   }
 }
 
@@ -98,23 +97,14 @@ function openModal(modal) {
   }
 }
 
-//OVERLAY FUNCTION
-function addOverlayListener(modal) {
-  const overlay = modal.querySelector(".modal__overlay");
-  if (overlay) {
-    overlay.addEventListener("click", () => {
-      closePopup(modal);
-    });
-  }
-}
-
 // CLOSE FUNCTION
 function closePopup(modal) {
   modal.classList.remove("modal_opened");
+  document.removeEventListener("keydown", modal.closeModalOnEsc);
 }
 
 // OPEN FUNCTION
-function openPopup(modal) {
+function openPopup(openModal) {
   modal.classList.add("modal_opened");
   addEscListener(modal);
 }
@@ -184,7 +174,7 @@ function handleAddCardFormSubmit(e) {
   e.preventDefault();
   const name = addCardTitleInput.value;
   const link = imageLinkInput.value;
-  renderCard({ name, link, cardListEl });
+  renderCard({ name, link });
   e.target.reset();
   closePopup(profileAddModal);
 }
@@ -207,7 +197,7 @@ addCardFormElement.addEventListener("submit", handleAddCardFormSubmit);
 //ADD NEW CARD
 addNewCardButton.addEventListener("click", () => openPopup(profileAddModal));
 
-initialCards.forEach((cardData) => renderCard(cardData, cardListEl));
+initialCards.forEach((cardData) => renderCard(cardData));
 
 modals.forEach((modal) => {
   modal.addEventListener("mousedown", (evt) => {
