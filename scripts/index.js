@@ -104,9 +104,8 @@ function closePopup(modal) {
 }
 
 // OPEN FUNCTION
-function openPopup(openModal) {
-  modal.classList.add("modal_opened");
-  addEscListener(modal);
+function openPopup(modal) {
+  openModal(modal);
 }
 
 // RENDER CARD
