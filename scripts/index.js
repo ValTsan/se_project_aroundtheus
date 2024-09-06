@@ -181,7 +181,7 @@ function handleAddCardFormSubmit(e) {
 profileEditBtn.addEventListener("click", () => {
   profileTitleInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
-  openPopup(profileEditModal);
+  openModal(profileEditModal);
 });
 
 //FORM LISTENERS
@@ -189,7 +189,7 @@ profileEditForm.addEventListener("submit", handleProfileEditSubmit);
 addCardFormElement.addEventListener("submit", handleAddCardFormSubmit);
 
 //ADD NEW CARD
-addNewCardButton.addEventListener("click", () => openPopup(profileAddModal));
+addNewCardButton.addEventListener("click", () => openModal(profileAddModal));
 
 initialCards.forEach((cardData) => renderCard(cardData));
 
