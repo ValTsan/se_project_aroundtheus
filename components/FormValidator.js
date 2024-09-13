@@ -5,26 +5,30 @@ class FormValidator {
     this._inputList = Array.from(
       this._formElement.querySelectorAll(this._settings.inputSelector)
     );
+
     this._submitButton = this._formElement.querySelector(
       this._settings.submitButtonSelector
     );
   }
 
+  //ENABLE VALIDATION
   enableValidation() {
     this._setEventListeners();
   }
 
+  //EVENT LISTENERS INPUT AND BUTTON STATE
   _setEventListeners() {
-    this._toggleButtonState(); // Initial button state check
+    this._toggleButtonState();
 
     this._inputList.forEach((inputElement) => {
       inputElement.addEventListener("input", () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(); // Toggle the button state after input
+        this._toggleButtonState();
       });
     });
   }
 
+  //CHECK INPUT VALIDITY
   _checkInputValidity(inputElement) {
     if (!inputElement.validity.valid) {
       this._showInputError(inputElement, inputElement.validationMessage);
@@ -33,6 +37,7 @@ class FormValidator {
     }
   }
 
+  //SHOW INPUT ERROR MESSAGE
   _showInputError(inputElement, errorMessage) {
     const errorElement = this._formElement.querySelector(
       `#${inputElement.id}-error`
@@ -42,6 +47,7 @@ class FormValidator {
     errorElement.classList.add(this._settings.errorClass);
   }
 
+  //HIDE ERROR MESSAGE
   _hideInputError(inputElement) {
     const errorElement = this._formElement.querySelector(
       `#${inputElement.id}-error`
@@ -51,10 +57,12 @@ class FormValidator {
     errorElement.textContent = "";
   }
 
+  //CHECK INVALID INPUT
   _hasInvalidInput() {
     return this._inputList.some((inputElement) => !inputElement.validity.valid);
   }
 
+  //TOGGLE STATE BUTTON (GREYED OUT OR NOT)
   _toggleButtonState() {
     if (this._hasInvalidInput()) {
       this._submitButton.classList.add(this._settings.inactiveButtonClass);
@@ -65,19 +73,20 @@ class FormValidator {
     }
   }
 
+  //RESET VALIDATION FORM
   resetValidation() {
-    this._toggleButtonState(); // Reset button state
+    this._toggleButtonState();
 
     this._inputList.forEach((inputElement) => {
-      this._hideInputError(inputElement); // Reset all input errors
+      this._hideInputError(inputElement);
     });
   }
 
-  // Method to disable the button after successful submission
+  //DISBALED SUMBIT BUTTON (AFTER SUBMISISON)
   disableButtonAfterSubmit() {
     this._submitButton.classList.add(this._settings.inactiveButtonClass);
     this._submitButton.disabled = true;
   }
 }
 
-export default FormValidator; //Export
+export default FormValidator;

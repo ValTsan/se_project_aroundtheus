@@ -200,7 +200,7 @@ modals.forEach((modal) => {
 
 //FORM VALIDATION
 
-const formConfig = {
+const settings = {
   formSelector: ".modal__form",
   inputSelector: ".modal__input",
   submitButtonSelector: ".modal__button",
@@ -209,17 +209,22 @@ const formConfig = {
   errorClass: "modal__error_visible",
 };
 
-const formList = Array.from(document.querySelectorAll(formConfig.formSelector));
+const editFormValidator = new FormValidator(settings, profileEditForm);
+const addFormValidator = new FormValidator(settings, addCardFormElement);
 
-formList.forEach((formElement) => {
-  const formValidator = new FormValidator(formConfig, formElement);
-  formValidator.enableValidation();
+editFormValidator.enableValidation();
+addFormValidator.enableValidation();
 
-  formElement.addEventListener("submit", (evt) => {
-    evt.preventDefault();
+profileEditForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  editFormValidator.resetValidation();
+  editFormValidator.disableButtonAfterSubmit();
+  profileEditForm.reset();
+});
 
-    formValidator.resetValidation();
-    formValidator.disableButtonAfterSubmit();
-    formElement.reset();
-  });
+addCardFormElement.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  addFormValidator.resetValidation();
+  addFormValidator.disableButtonAfterSubmit();
+  addCardFormElement.reset();
 });

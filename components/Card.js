@@ -49,17 +49,17 @@ class Card {
   createCard() {
     this._element = this._getTemplate();
 
-    //Card content
+    //CARD CONTENT
     this._element.querySelector(".card__title").textContent = this._name;
     const cardImage = this._element.querySelector(".card__image");
     cardImage.src = this._link;
     cardImage.alt = this._name;
 
-    //Event listeners
+    //EVENT LISTENERS
     this._setEventListeners();
 
     return this._element;
   }
 }
 
-export default Card; //Export
+export default Card; //EXPORT
