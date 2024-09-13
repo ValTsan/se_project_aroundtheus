@@ -28,22 +28,6 @@ const initialCards = [
   },
 ];
 
-const cardData = {
-  name: "Yosemite Valley",
-  link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
-};
-
-const card = new Card(cardData, "#card-form");
-
-function handleImageClick(link, name) {
-  showPreview(link, name);
-}
-
-initialCards.forEach((data) => {
-  const card = new Card(data, "#card-form", handleImageClick);
-  const cardElement = card.createCard();
-});
-
 /* ------------------------------------------------- */
 /*                     Elements
 /* ------------------------------------------------- */
@@ -124,7 +108,8 @@ function closeModal(modal) {
 
 // RENDER CARD
 function renderCard(cardData, wrapper = cardListEl, method = "prepend") {
-  const cardElement = getCardElement(cardData);
+  const card = new Card(cardData, "#card-form", handleImageClick);
+  const cardElement = card.createCard();
   wrapper[method](cardElement);
 }
 
@@ -141,33 +126,22 @@ function showPreview(imageSrc, imageAlt) {
   }
 }
 
-//CARD TEMPLATE FUNCTION
-function getCardElement(cardData) {
-  const cardElement = cardTemplate.cloneNode(true);
-  const cardImageEl = cardElement.querySelector(".card__image");
-  const cardTitleEl = cardElement.querySelector(".card__title");
-  const likeButton = cardElement.querySelector(".card__like-button");
-  const deleteButton = cardElement.querySelector(".card__delete-button");
+//NEW CARD TEMPLATE
+const cardData = {
+  name: "Yosemite Valley",
+  link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
+};
 
-  likeButton.addEventListener("click", () => {
-    likeButton.classList.toggle("card__like-button_active");
-  });
+const card = new Card(cardData, "#card-form");
 
-  deleteButton.addEventListener("click", () => {
-    cardElement.remove();
-  });
-
-  cardImageEl.addEventListener("click", () => {
-    showPreview(cardData.link, cardData.name);
-  });
-
-  cardImageEl.src = cardData.link;
-  cardImageEl.alt = cardData.name;
-
-  cardTitleEl.textContent = cardData.name;
-
-  return cardElement;
+function handleImageClick(link, name) {
+  showPreview(link, name);
 }
+
+initialCards.forEach((data) => {
+  const card = new Card(data, "#card-form", handleImageClick);
+  const cardElement = card.createCard();
+});
 
 /* ------------------------------------------------- */
 /*                     Event Handlers
