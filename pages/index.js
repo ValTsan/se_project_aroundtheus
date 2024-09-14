@@ -132,38 +132,29 @@ const cardData = {
   link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
 };
 
-const card = new Card(cardData, "#card-form");
-
 function handleImageClick(link, name) {
   showPreview(link, name);
 }
-
-initialCards.forEach((data) => {
-  const card = new Card(data, "#card-form", handleImageClick);
-  const cardElement = card.createCard();
-});
 
 /* ------------------------------------------------- */
 /*                     Event Handlers
 /* ------------------------------------------------- */
 
-// EDIT PROFILE HANDLER
-function handleProfileEditSubmit(e) {
+function handleSubmit(e) {
   e.preventDefault();
-  profileTitle.textContent = profileTitleInput.value;
-  profileDescription.textContent = profileDescriptionInput.value;
 
-  closeModal(profileEditModal);
-}
-
-// ADD IMAGE HANDLER
-function handleAddCardFormSubmit(e) {
-  e.preventDefault();
-  const name = addCardTitleInput.value;
-  const link = imageLinkInput.value;
-  renderCard({ name, link });
-  e.target.reset();
-  closeModal(profileAddModal);
+  if (e.target === profileEditForm) {
+    profileTitle.textContent = profileTitleInput.value;
+    profileDescription.textContent = profileDescriptionInput.value;
+    closeModal(profileEditModal);
+  } else if (e.target === addCardFormElement) {
+    const name = addCardTitleInput.value;
+    const link = imageLinkInput.value;
+    renderCard({ name, link });
+    e.target.reset();
+    addFormValidator.resetValidation();
+    closeModal(profileAddModal);
+  }
 }
 
 /* ------------------------------------------------- */
@@ -174,12 +165,13 @@ function handleAddCardFormSubmit(e) {
 profileEditBtn.addEventListener("click", () => {
   profileTitleInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
+  editFormValidator.resetValidation();
   openModal(profileEditModal);
 });
 
 //FORM LISTENERS
-profileEditForm.addEventListener("submit", handleProfileEditSubmit);
-addCardFormElement.addEventListener("submit", handleAddCardFormSubmit);
+profileEditForm.addEventListener("submit", handleSubmit);
+addCardFormElement.addEventListener("submit", handleSubmit);
 
 //ADD NEW CARD
 addNewCardButton.addEventListener("click", () => openModal(profileAddModal));
@@ -214,17 +206,3 @@ const addFormValidator = new FormValidator(settings, addCardFormElement);
 
 editFormValidator.enableValidation();
 addFormValidator.enableValidation();
-
-profileEditForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  editFormValidator.resetValidation();
-  editFormValidator.disableButtonAfterSubmit();
-  profileEditForm.reset();
-});
-
-addCardFormElement.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  addFormValidator.resetValidation();
-  addFormValidator.disableButtonAfterSubmit();
-  addCardFormElement.reset();
-});

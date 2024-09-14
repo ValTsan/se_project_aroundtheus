@@ -62,15 +62,20 @@ class FormValidator {
     return this._inputList.some((inputElement) => !inputElement.validity.valid);
   }
 
-  //TOGGLE STATE BUTTON (GREYED OUT OR NOT)
+  //TOGGLE STATE BUTTON
   _toggleButtonState() {
     if (this._hasInvalidInput()) {
-      this._submitButton.classList.add(this._settings.inactiveButtonClass);
-      this._submitButton.disabled = true;
+      this._disableButton();
     } else {
       this._submitButton.classList.remove(this._settings.inactiveButtonClass);
       this._submitButton.disabled = false;
     }
+  }
+
+  // DISABLE BUTTON FUNCTION
+  _disableButton() {
+    this._submitButton.classList.add(this._settings.inactiveButtonClass);
+    this._submitButton.disabled = true;
   }
 
   //RESET VALIDATION FORM
@@ -80,12 +85,6 @@ class FormValidator {
     this._inputList.forEach((inputElement) => {
       this._hideInputError(inputElement);
     });
-  }
-
-  //DISBALED SUMBIT BUTTON (AFTER SUBMISISON)
-  disableButtonAfterSubmit() {
-    this._submitButton.classList.add(this._settings.inactiveButtonClass);
-    this._submitButton.disabled = true;
   }
 }
 
