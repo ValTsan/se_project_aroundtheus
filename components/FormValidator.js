@@ -70,7 +70,6 @@ class FormValidator {
       this._submitButton.disabled = false;
     }
   };
-  disableButton;
 
   // DISABLE BUTTON FUNCTION
   disableButton = () => {
