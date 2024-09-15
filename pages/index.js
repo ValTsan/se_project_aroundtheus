@@ -140,21 +140,24 @@ function handleImageClick(link, name) {
 /*                     Event Handlers
 /* ------------------------------------------------- */
 
-function handleSubmit(e) {
+// EDIT PROFILE HANDLER
+function handleProfileEditSubmit(e) {
   e.preventDefault();
+  profileTitle.textContent = profileTitleInput.value;
+  profileDescription.textContent = profileDescriptionInput.value;
 
-  if (e.target === profileEditForm) {
-    profileTitle.textContent = profileTitleInput.value;
-    profileDescription.textContent = profileDescriptionInput.value;
-    closeModal(profileEditModal);
-  } else if (e.target === addCardFormElement) {
-    const name = addCardTitleInput.value;
-    const link = imageLinkInput.value;
-    renderCard({ name, link });
-    e.target.reset();
-    addFormValidator.resetValidation();
-    closeModal(profileAddModal);
-  }
+  closeModal(profileEditModal);
+}
+
+// ADD IMAGE HANDLER
+function handleAddCardFormSubmit(e) {
+  e.preventDefault();
+  const name = addCardTitleInput.value;
+  const link = imageLinkInput.value;
+  renderCard({ name, link });
+  e.target.reset();
+  addFormValidator.disableButton();
+  closeModal(profileAddModal);
 }
 
 /* ------------------------------------------------- */
@@ -170,8 +173,8 @@ profileEditBtn.addEventListener("click", () => {
 });
 
 //FORM LISTENERS
-profileEditForm.addEventListener("submit", handleSubmit);
-addCardFormElement.addEventListener("submit", handleSubmit);
+profileEditForm.addEventListener("submit", handleProfileEditSubmit);
+addCardFormElement.addEventListener("submit", handleAddCardFormSubmit);
 
 //ADD NEW CARD
 addNewCardButton.addEventListener("click", () => openModal(profileAddModal));

@@ -11,7 +11,6 @@ class FormValidator {
     );
   }
 
-  //ENABLE VALIDATION
   enableValidation() {
     this._setEventListeners();
   }
@@ -63,20 +62,21 @@ class FormValidator {
   }
 
   //TOGGLE STATE BUTTON
-  _toggleButtonState() {
+  _toggleButtonState = () => {
     if (this._hasInvalidInput()) {
-      this._disableButton();
+      this.disableButton();
     } else {
       this._submitButton.classList.remove(this._settings.inactiveButtonClass);
       this._submitButton.disabled = false;
     }
-  }
+  };
+  disableButton;
 
   // DISABLE BUTTON FUNCTION
-  _disableButton() {
+  disableButton = () => {
     this._submitButton.classList.add(this._settings.inactiveButtonClass);
     this._submitButton.disabled = true;
-  }
+  };
 
   //RESET VALIDATION FORM
   resetValidation() {
