@@ -132,7 +132,6 @@ function handleProfileFormSubmit(formData) {
 }
 //REFACTORED IMAGE PREVIEW FUNCTION (PopupWithImage.js)
 const imagePopup = new PopupWithImage("#preview-modal");
-console.log(imagePopup);
 imagePopup.setEventListeners();
 
 function handleImageClick(link, name) {
@@ -147,7 +146,7 @@ const renderer = (cardData) => {
 };
 
 const section = new Section({ items: initialCards, renderer }, ".card__list");
-section.renderItems();
+//section.renderItems();
 
 /* ------------------------------------------------- */
 /*                     Event Handlers

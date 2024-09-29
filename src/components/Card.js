@@ -6,6 +6,13 @@ class Card {
     this._handleImageClick = handleImageClick;
   }
 
+  //getView() {
+  //this._element = this._getTemplate();
+  // this._likeButton = this._element.querySelector(".card__like-button");
+  // this._cardImage = this._element.querySelector(".card__image");
+  //this._trashButton = this._element.querySelector(".card__trash-button");
+  // }
+
   _getTemplate() {
     const cardElement = document
       .querySelector(this._cardSelector)
@@ -19,6 +26,7 @@ class Card {
     this._element
       .querySelector(".card__like-button")
       .addEventListener("click", () => this._handleLikeButton());
+    console.log(this._likeButton);
 
     this._element
       .querySelector(".card__delete-button")
