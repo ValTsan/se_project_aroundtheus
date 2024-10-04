@@ -3,7 +3,10 @@ const cssnano = require("cssnano");
 
 module.exports = {
   plugins: [
-    autoprefixer, // Add vendor prefixes automatically
-    cssnano({ preset: "default" }), // Minify the CSS
+    require("postcss-import"),
+    autoprefixer({
+      overrideBrowserslist: ["last 2 versions", "not dead", "> 0.2%"],
+    }),
+    cssnano({ preset: "default" }),
   ],
 };

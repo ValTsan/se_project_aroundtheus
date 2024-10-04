@@ -29,7 +29,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: "babel-loader",
-        exclude: "/node_modules/",
+        options: {
+          presets: ["@babel/preset-env"],
+          exclude: /node_modules/,
+        },
       },
       {
         test: /\.css$/,
@@ -48,29 +51,10 @@ module.exports = {
       },
     ],
   },
-  module: {
-    rules: [
-      {
-        test: /\.ejs$/,
-        use: [
-          {
-            loader: "ejs-loader",
-            options: {
-              esModule: false,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: "asset/resource",
-      },
-    ],
-  },
+
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
-      filename: "index.html",
+      template: "src/index.html",
       favicon: "./src/images/favicon.ico",
     }),
     new CleanWebpackPlugin(),
