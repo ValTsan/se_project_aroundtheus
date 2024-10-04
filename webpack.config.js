@@ -37,6 +37,7 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
+            options: { importLoaders: 1 },
           },
           "postcss-loader",
         ],
@@ -47,9 +48,29 @@ module.exports = {
       },
     ],
   },
+  module: {
+    rules: [
+      {
+        test: /\.ejs$/,
+        use: [
+          {
+            loader: "ejs-loader",
+            options: {
+              esModule: false,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
+      },
+    ],
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      template: ".src/index.html",
+      template: "./src/index.html",
+      filename: "index.html",
       favicon: "./src/images/favicon.ico",
     }),
     new CleanWebpackPlugin(),
