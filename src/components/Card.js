@@ -26,7 +26,6 @@ class Card {
     this._element
       .querySelector(".card__like-button")
       .addEventListener("click", () => this._handleLikeButton());
-    console.log(this._likeButton);
 
     this._element
       .querySelector(".card__delete-button")
