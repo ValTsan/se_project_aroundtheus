@@ -43,19 +43,22 @@ const profileEditPopup = new PopupWithForm(
     profileTitle.textContent = formValues.title;
     profileDescription.textContent = formValues.description;
 
-    profileEditPopup.setEventListeners((formValues) => {
-      userInfo.setUserInfo(
-        formValues.profileTitle,
-        formValues.profileDescription
-      );
-    });
-
     profileEditPopup.close();
   }
 );
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
   const { name, job } = userInfo.getUserInfo();
-  userInfo.setUserInfo(name, job);
+
+  const nameInput = document.querySelector("input[name='title']");
+  const jobInput = document.querySelector("input[name='description']");
+
+  if (nameInput && jobInput) {
+    nameInput.value = name;
+    jobInput.value = job;
+  } else {
+    console.error("Input elements not found");
+  }
+
   profileEditPopup.open();
 });
 /* ------------------------------------------------- */
