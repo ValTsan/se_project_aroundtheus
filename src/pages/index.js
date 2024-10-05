@@ -26,7 +26,7 @@ const userInfo = new UserInfo({
   jobSelector: ".profile__description",
 });
 
-const currentUserInfo = userInfo.getUserInfo();
+//const currentUserInfo = userInfo.getUserInfo();
 //console.log(currentUserInfo);
 
 /* ------------------------------------------------- */
@@ -43,10 +43,19 @@ const profileEditPopup = new PopupWithForm(
     profileTitle.textContent = formValues.title;
     profileDescription.textContent = formValues.description;
 
+    profileEditPopup.setEventListeners((formValues) => {
+      userInfo.setUserInfo(
+        formValues.profileTitle,
+        formValues.profileDescription
+      );
+    });
+
     profileEditPopup.close();
   }
 );
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
+  const { name, job } = userInfo.getUserInfo();
+  userInfo.setUserInfo(name, job);
   profileEditPopup.open();
 });
 /* ------------------------------------------------- */
