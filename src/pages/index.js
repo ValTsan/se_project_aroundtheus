@@ -2,13 +2,13 @@
 /*                     Modules
 /* ------------------------------------------------- */
 import "../pages/index.css";
-import Card from "./Card.js";
+import Card from "../components/Card.js";
 import { initialCards } from "../utils/constants.js";
 //import FormValidator from "./FormValidator.js";
 import Section from "../components/Section.js";
-import PopupWithImage from "./PopupWithImage.js";
-import PopupWithForm from "./PopupWithForm.js";
-import UserInfo from "./UserInfo.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import PopupWithForm from "../components/PopupWithForm.js";
+import UserInfo from "../components/UserInfo.js";
 
 /* ------------------------------------------------- */
 /*                  Card Template 
