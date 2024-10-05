@@ -3,41 +3,13 @@
 /* ------------------------------------------------- */
 import "../pages/index.css";
 import Card from "./Card.js";
-import FormValidator from "./FormValidator.js";
+import { initialCards } from "../utils/constants.js";
+//import FormValidator from "./FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "./PopupWithImage.js";
 import PopupWithForm from "./PopupWithForm.js";
 import UserInfo from "./UserInfo.js";
 
-/* ------------------------------------------------- */
-/*                   Initial Cards
-/* ------------------------------------------------- */
-const initialCards = [
-  {
-    name: "Yosemite Valley",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
-  },
-  {
-    name: "Lake Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lake-louise.jpg",
-  },
-  {
-    name: "Bald Mountains",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/bald-mountains.jpg",
-  },
-  {
-    name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/latemar.jpg",
-  },
-  {
-    name: "Vanoise National Park",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/vanoise.jpg",
-  },
-  {
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
-  },
-];
 /* ------------------------------------------------- */
 /*                  Card Template 
 /* ------------------------------------------------- */
@@ -63,7 +35,7 @@ const currentUserInfo = userInfo.getUserInfo();
 const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
-    console.log("Form values received:", formValues);
+    //console.log("Form values received:", formValues);
 
     const profileTitle = document.querySelector(".profile__title");
     const profileDescription = document.querySelector(".profile__description");
