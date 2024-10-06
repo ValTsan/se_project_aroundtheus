@@ -4,7 +4,7 @@
 import "../pages/index.css";
 import Card from "../components/Card.js";
 import { initialCards } from "../utils/constants.js";
-//import FormValidator from "./FormValidator.js";
+import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
@@ -48,7 +48,7 @@ const profileEditPopup = new PopupWithForm(
 );
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
   const { name, job } = userInfo.getUserInfo();
-
+  console.log(userInfo.getUserInfo());
   const nameInput = document.querySelector("input[name='title']");
   const jobInput = document.querySelector("input[name='description']");
 
@@ -116,3 +116,7 @@ const settings = {
   inputErrorClass: "modal__input_has-error",
   errorClass: "modal__error_visible",
 };
+
+const modalForm = document.querySelector(".modal__form");
+const modalFormValidator = new FormValidator(settings, modalForm);
+modalFormValidator.enableValidation();
