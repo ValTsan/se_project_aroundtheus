@@ -117,6 +117,8 @@ const settings = {
   errorClass: "modal__error_visible",
 };
 
-const modalForm = document.querySelector(".modal__form");
-const modalFormValidator = new FormValidator(settings, modalForm);
-modalFormValidator.enableValidation();
+const modalForms = document.querySelectorAll(".modal__form");
+modalForms.forEach((currentForm) => {
+  const modalFormValidator = new FormValidator(settings, currentForm);
+  modalFormValidator.enableValidation();
+});
