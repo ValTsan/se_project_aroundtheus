@@ -10,15 +10,13 @@ export default class PopupWithForm extends Popup {
     this.setEventListeners();
   }
 
-  open() {
-    this._popupElement.classList.add("modal_opened");
-    document.addEventListener("keydown", this._handleEscClose);
-    super.open();
-  }
-
   close() {
     this._popupForm.reset();
     super.close();
+  }
+
+  getForm() {
+    return this._popupForm;
   }
 
   _getInputValues() {
@@ -26,10 +24,15 @@ export default class PopupWithForm extends Popup {
     this._inputList.forEach((input) => {
       formValues[input.name] = input.value;
     });
-    //console.log("Captured form values:", formValues);
+    console.log("Captured form values:", formValues);
     return formValues;
   }
 
+  setInputValues(data) {
+    this._inputList.forEach((input) => {
+      input.value = data[input.name];
+    });
+  }
   setEventListeners() {
     this._popupForm.addEventListener("submit", (evt) => {
       evt.preventDefault();

@@ -17,8 +17,4 @@ export default class PopupWithImage extends Popup {
     this._captionElement.textContent = name;
     super.open();
   }
-
-  setEventListeners() {
-    super.setEventListeners();
-  }
 }

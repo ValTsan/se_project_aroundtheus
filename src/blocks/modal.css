@@ -166,6 +166,7 @@
 @media screen and (max-width: 660px) {
   .modal__container {
     padding: 25px 22px 25px 22px;
+    min-height: auto;
   }
 
   .modal__heading {

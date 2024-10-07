@@ -35,7 +35,7 @@ const userInfo = new UserInfo({
 const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
-    //console.log("Form values received:", formValues);
+    console.log(formValues);
 
     const profileTitle = document.querySelector(".profile__title");
     const profileDescription = document.querySelector(".profile__description");
@@ -67,17 +67,13 @@ document.querySelector("#profile-edit-button").addEventListener("click", () => {
 const addCardFormPopup = new PopupWithForm(
   "#profile-add-modal",
   (formValues) => {
+    console.log("Link provided:", formValues.link);
     const cardTitle = formValues.title;
     const cardLink = formValues.link;
 
-    const newCard = new Card(
-      { name: cardTitle, link: cardLink },
-      "#card-form",
-      handleImageClick
-    );
-    const cardElement = newCard.createCard();
+    const cardData = { name: cardTitle, link: cardLink };
+    section._renderer(cardData);
 
-    document.querySelector(".card__list").prepend(cardElement);
     addCardFormPopup.close();
   }
 );
@@ -92,19 +88,26 @@ const imagePopup = new PopupWithImage("#preview-modal");
 imagePopup.setEventListeners();
 
 function handleImageClick(link, name) {
+  //console.log("Image clicked!", { link, name });
   imagePopup.open({ name, link });
 }
 /* ------------------------------------------------- */
 /*                 Render Cards/Image 
 /* ------------------------------------------------- */
+
 const renderer = (cardData) => {
-  const card = new Card(cardData, "#card-form", handleImageClick);
-  const cardElement = card.createCard();
+  const cardElement = createCard(cardData);
   section.addItem(cardElement);
 };
 
+function createCard(item) {
+  const cardElement = new Card(item, "#card-form", handleImageClick);
+  return cardElement.createCard();
+}
+
 const section = new Section({ items: initialCards, renderer }, ".card__list");
 section.renderItems();
+
 /* ------------------------------------------------- */
 /*                     Form Validation 
 /* ------------------------------------------------- */
