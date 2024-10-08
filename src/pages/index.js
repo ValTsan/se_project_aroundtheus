@@ -67,11 +67,13 @@ document.querySelector("#profile-edit-button").addEventListener("click", () => {
 const addCardFormPopup = new PopupWithForm(
   "#profile-add-modal",
   (formValues) => {
-    console.log("Link provided:", formValues.link);
+    //console.log("Link provided:", formValues.link);
+    //console.log("Title provided:", formValues.title);
     const cardTitle = formValues.title;
     const cardLink = formValues.link;
 
     const cardData = { name: cardTitle, link: cardLink };
+    //console.log("Card data blah ", cardData);
     section._renderer(cardData);
 
     addCardFormPopup.close();
@@ -96,16 +98,19 @@ function handleImageClick(link, name) {
 /* ------------------------------------------------- */
 
 const renderer = (cardData) => {
+  //console.log("Rendering card data:", cardData);
   const cardElement = createCard(cardData);
   section.addItem(cardElement);
 };
 
 function createCard(item) {
+  //console.log("Creating card for item:", item);
   const cardElement = new Card(item, "#card-form", handleImageClick);
   return cardElement.createCard();
 }
 
 const section = new Section({ items: initialCards, renderer }, ".card__list");
+console.log(initialCards);
 section.renderItems();
 
 /* ------------------------------------------------- */

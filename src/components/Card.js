@@ -3,6 +3,7 @@ class Card {
     this._name = name;
     this._link = link;
     //console.log("Card link:", this._link);
+
     this._cardSelector = cardSelector;
     this._handleImageClick = handleImageClick;
   }
@@ -13,11 +14,14 @@ class Card {
       .content.querySelector(".card")
       .cloneNode(true);
 
+    // console.log(
+    //   "Card selector template:",
+    //   document.querySelector(this._cardSelector)
+    // );
     return cardElement;
   }
 
   _setEventListeners() {
-    this._element = this._getTemplate();
     this._likeButton = this._element.querySelector(".card__like-button");
     this._cardImage = this._element.querySelector(".card__image");
     // console.log(this._cardImage);
@@ -55,5 +59,6 @@ class Card {
 
     return this._element;
   }
+  $;
 }
 export default Card;
