@@ -4,6 +4,7 @@
 import "../pages/index.css";
 import Card from "../components/Card.js";
 import { initialCards } from "../utils/constants.js";
+import { settings } from "../utils/constants.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
@@ -26,57 +27,66 @@ const userInfo = new UserInfo({
   jobSelector: ".profile__description",
 });
 
-//const currentUserInfo = userInfo.getUserInfo();
-//console.log(currentUserInfo);
-
 /* ------------------------------------------------- */
 /*                 Profile Edit Form 
 /* ------------------------------------------------- */
 const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
-    console.log(formValues);
+    //console.log(formValues);
+    const formName = document
+      .querySelector("#profile-edit-modal")
+      .getAttribute("name");
+    const validator = formValidators[formName];
+    validator.enableValidation();
 
-    const profileTitle = document.querySelector(".profile__title");
-    const profileDescription = document.querySelector(".profile__description");
-
-    profileTitle.textContent = formValues.title;
-    profileDescription.textContent = formValues.description;
-
-    profileEditPopup.close();
+    if (!validator._hasInvalidInput()) {
+      userInfo.setUserInfo({
+        name: formValues.title,
+        job: formValues.description,
+      });
+      profileEditPopup.close();
+    }
   }
 );
+
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
   const { name, job } = userInfo.getUserInfo();
   console.log(userInfo.getUserInfo());
-  const nameInput = document.querySelector("input[name='title']");
-  const jobInput = document.querySelector("input[name='description']");
 
-  if (nameInput && jobInput) {
-    nameInput.value = name;
-    jobInput.value = job;
-  } else {
-    console.error("Input elements not found");
-  }
+  profileEditPopup.setInputValues({
+    title: name,
+    description: job,
+  });
 
   profileEditPopup.open();
 });
+
 /* ------------------------------------------------- */
 /*                 Add Card/Image Form 
 /* ------------------------------------------------- */
 const addCardFormPopup = new PopupWithForm(
   "#profile-add-modal",
   (formValues) => {
-    //console.log("Link provided:", formValues.link);
-    //console.log("Title provided:", formValues.title);
     const cardTitle = formValues.title;
     const cardLink = formValues.link;
 
     const cardData = { name: cardTitle, link: cardLink };
-    //console.log("Card data blah ", cardData);
-    section._renderer(cardData);
 
-    addCardFormPopup.close();
+    const formName = document
+      .querySelector("#profile-add-modal")
+      .getAttribute("name");
+
+    const validator = formValidators[formName];
+    validator.enableValidation();
+
+    if (!validator._hasInvalidInput()) {
+      section._renderer(cardData);
+      addCardFormPopup.close();
+      validator.resetValidation();
+    } else {
+      console.log("Form has validation errors.");
+    }
   }
 );
 
@@ -90,43 +100,38 @@ const imagePopup = new PopupWithImage("#preview-modal");
 imagePopup.setEventListeners();
 
 function handleImageClick(link, name) {
-  //console.log("Image clicked!", { link, name });
   imagePopup.open({ name, link });
 }
 /* ------------------------------------------------- */
 /*                 Render Cards/Image 
 /* ------------------------------------------------- */
-
+function createCard(item) {
+  const cardElement = new Card(item, "#card-form", handleImageClick);
+  return cardElement.createCard();
+}
 const renderer = (cardData) => {
-  //console.log("Rendering card data:", cardData);
   const cardElement = createCard(cardData);
   section.addItem(cardElement);
 };
 
-function createCard(item) {
-  //console.log("Creating card for item:", item);
-  const cardElement = new Card(item, "#card-form", handleImageClick);
-  return cardElement.createCard();
-}
-
 const section = new Section({ items: initialCards, renderer }, ".card__list");
-console.log(initialCards);
+//console.log(initialCards);
 section.renderItems();
 
 /* ------------------------------------------------- */
 /*                     Form Validation 
 /* ------------------------------------------------- */
-const settings = {
-  formSelector: ".modal__form",
-  inputSelector: ".modal__input",
-  submitButtonSelector: ".modal__button",
-  inactiveButtonClass: "modal__button_disabled",
-  inputErrorClass: "modal__input_has-error",
-  errorClass: "modal__error_visible",
+const formValidators = {};
+
+const enableValidation = (settings) => {
+  const formList = Array.from(document.querySelectorAll(settings.formSelector));
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(settings, formElement);
+    const formName = formElement.getAttribute("name");
+
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
 };
 
-const modalForms = document.querySelectorAll(".modal__form");
-modalForms.forEach((currentForm) => {
-  const modalFormValidator = new FormValidator(settings, currentForm);
-  modalFormValidator.enableValidation();
-});
+enableValidation(settings);
