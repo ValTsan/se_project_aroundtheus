@@ -13,6 +13,7 @@ export default class UserInfo {
   }
 
   setUserInfo({ name, job }) {
+    //console.log(this.setUserInfo);
     this._nameElement.textContent = name;
     this._jobElement.textContent = job;
   }

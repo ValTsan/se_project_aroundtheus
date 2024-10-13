@@ -27,32 +27,23 @@ const userInfo = new UserInfo({
   jobSelector: ".profile__description",
 });
 
+// /* ------------------------------------------------- */
+// /*                 Profile Edit Form
 /* ------------------------------------------------- */
-/*                 Profile Edit Form 
-/* ------------------------------------------------- */
+
 const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
-    //console.log(formValues);
-    const formName = document
-      .querySelector("#profile-edit-modal")
-      .getAttribute("name");
-    const validator = formValidators[formName];
-    validator.enableValidation();
+    userInfo.setUserInfo({
+      name: formValues.title,
+      job: formValues.description,
+    });
 
-    if (!validator._hasInvalidInput()) {
-      userInfo.setUserInfo({
-        name: formValues.title,
-        job: formValues.description,
-      });
-      profileEditPopup.close();
-    }
+    profileEditPopup.close();
   }
 );
-
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
   const { name, job } = userInfo.getUserInfo();
-  console.log(userInfo.getUserInfo());
 
   profileEditPopup.setInputValues({
     title: name,
@@ -76,9 +67,8 @@ const addCardFormPopup = new PopupWithForm(
     const formName = document
       .querySelector("#profile-add-modal")
       .getAttribute("name");
-
     const validator = formValidators[formName];
-    validator.enableValidation();
+    //validator.enableValidation();
 
     if (!validator._hasInvalidInput()) {
       section._renderer(cardData);
@@ -117,9 +107,8 @@ const renderer = (cardData) => {
 const section = new Section({ items: initialCards, renderer }, ".card__list");
 //console.log(initialCards);
 section.renderItems();
-
 /* ------------------------------------------------- */
-/*                     Form Validation 
+/*                     Form Validation
 /* ------------------------------------------------- */
 const formValidators = {};
 
