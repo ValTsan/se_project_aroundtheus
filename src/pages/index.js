@@ -40,12 +40,8 @@ const profileEditPopup = new PopupWithForm(
     });
 
     profileEditPopup.close();
-
-    const formName = profileEditPopup
-      .getForm("profile-edit-form")
-      .getAttribute("name");
+    const formName = profileEditPopup.getForm().getAttribute("name");
     const validator = formValidators[formName];
-    validator.resetValidation();
     validator.disableButton();
   }
 );
@@ -58,18 +54,9 @@ document.querySelector("#profile-edit-button").addEventListener("click", () => {
   });
 
   profileEditPopup.open();
-
-  const formName = profileEditPopup
-    .getForm("profile-edit-form")
-    .getAttribute("name");
+  const formName = profileEditPopup.getForm().getAttribute("name");
   const validator = formValidators[formName];
-  validator.disableButton();
-
-  document.querySelectorAll(".modal__input").forEach((input) => {
-    input.addEventListener("input", () => {
-      validator.toggleButtonState();
-    });
-  });
+  validator.resetValidation();
 });
 
 /* ------------------------------------------------- */
@@ -83,15 +70,12 @@ const addCardFormPopup = new PopupWithForm(
 
     const cardData = { name: cardTitle, link: cardLink };
 
-    const formName = addCardFormPopup
-      .getForm("add-card-form")
-      .getAttribute("name");
+    const formName = addCardFormPopup.getForm().getAttribute("name");
     const validator = formValidators[formName];
 
     section.renderer(cardData);
     addCardFormPopup.close();
-    validator.resetValidation();
-    validator.disableButton(); //disbale create button again after submission
+    validator.disableButton(); //disable create button again after submission
   }
 );
 
