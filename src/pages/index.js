@@ -40,6 +40,13 @@ const profileEditPopup = new PopupWithForm(
     });
 
     profileEditPopup.close();
+
+    const formName = profileEditPopup
+      .getForm("profile-edit-form")
+      .getAttribute("name");
+    const validator = formValidators[formName];
+    validator.resetValidation();
+    validator.disableButton();
   }
 );
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
@@ -51,6 +58,18 @@ document.querySelector("#profile-edit-button").addEventListener("click", () => {
   });
 
   profileEditPopup.open();
+
+  const formName = profileEditPopup
+    .getForm("profile-edit-form")
+    .getAttribute("name");
+  const validator = formValidators[formName];
+  validator.disableButton();
+
+  document.querySelectorAll(".modal__input").forEach((input) => {
+    input.addEventListener("input", () => {
+      validator.toggleButtonState();
+    });
+  });
 });
 
 /* ------------------------------------------------- */
@@ -64,19 +83,15 @@ const addCardFormPopup = new PopupWithForm(
 
     const cardData = { name: cardTitle, link: cardLink };
 
-    const formName = document
-      .querySelector("#profile-add-modal")
+    const formName = addCardFormPopup
+      .getForm("add-card-form")
       .getAttribute("name");
     const validator = formValidators[formName];
-    //validator.enableValidation();
 
-    if (!validator._hasInvalidInput()) {
-      section._renderer(cardData);
-      addCardFormPopup.close();
-      validator.resetValidation();
-    } else {
-      console.log("Form has validation errors.");
-    }
+    section.renderer(cardData);
+    addCardFormPopup.close();
+    validator.resetValidation();
+    validator.disableButton(); //disbale create button again after submission
   }
 );
 
