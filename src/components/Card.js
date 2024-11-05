@@ -1,9 +1,24 @@
 class Card {
-  constructor({ name, link }, cardSelector, handleImageClick) {
+  constructor(
+    { name, link, _id },
+    cardSelector,
+    handleImageClick,
+    handleDeleteClick,
+    confirmPopup
+  ) {
     this._name = name;
     this._link = link;
+    this._id = _id;
+    //console.log("Card ID: Constructor parameter:", this._id);
     this._cardSelector = cardSelector;
+    this._confirmPopup = confirmPopup;
     this._handleImageClick = handleImageClick;
+    this._handleDeleteClick = handleDeleteClick;
+  }
+
+  _getID() {
+    console.log("Getting ID:", this._id);
+    return this._id;
   }
 
   _getTemplate() {
@@ -34,7 +49,14 @@ class Card {
 
     if (this._trashButton) {
       this._trashButton.addEventListener("click", () => {
-        this._handleDeleteButton();
+        const cardId = this._getID();
+        console.log("Opening confirm popup for ID:", cardId);
+        console.log("Card element:", this._element);
+        this._confirmPopup.open(
+          (this._id, this._element)
+
+          // => this._handleDeleteButton()
+        );
       });
     }
   }
@@ -44,8 +66,17 @@ class Card {
   }
 
   _handleDeleteButton() {
-    this._element.remove();
-    this._element = null;
+    const cardId = this._getID();
+    console.log("Deleting Card ID:", cardId);
+    this._handleDeleteClick(this._getID(), this._element);
+    //this._handleDeleteClick(this.getID, this._element);
+    // this._api
+    //   .removeCard(this.getID())
+    //   .then(() => {
+    // this._element.remove();
+    // this._element = null;
+    // })
+    //.catch((err) => console.error("Error deleting card:", err));
   }
 
   createCard() {

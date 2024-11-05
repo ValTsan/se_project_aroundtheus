@@ -3,13 +3,26 @@
 /* ------------------------------------------------- */
 import "../pages/index.css";
 import Card from "../components/Card.js";
-import { initialCards } from "../utils/constants.js";
 import { settings } from "../utils/constants.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
+import PopupConfirmation from "../components/PopupConfirmation.js";
 import UserInfo from "../components/UserInfo.js";
+import Api from "../components/Api.js";
+
+/* ------------------------------------------------- */
+/*                        API
+/* ------------------------------------------------- */
+const api = new Api({
+  baseUrl: "https://around-api.en.tripleten-services.com/v1",
+  token: "29a0771b-e289-443d-a8da-6cea882e108e",
+});
+
+console.log("Before API Call");
+
+//api.removeCard("6722c929c26271001a13b2ce").then((res) => console.log(res));
 
 /* ------------------------------------------------- */
 /*                  Card Template 
@@ -27,17 +40,34 @@ const userInfo = new UserInfo({
   jobSelector: ".profile__description",
 });
 
+api.getUserInfo().then((userData) => {
+  //console.log("User Data from API:", userData);
+  userInfo.setUserInfo({
+    name: userData.name,
+    job: userData.about,
+  });
+});
+
 // /* ------------------------------------------------- */
-// /*                 Profile Edit Form
+// /*                 Profile Edit
 /* ------------------------------------------------- */
 
 const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
+    api.getUserInfo().then((userData) => {
+      //console.log("User Data from API:", userData);
+      userInfo.setUserInfo({
+        name: userData.name,
+        job: userData.about,
+      });
+    });
     userInfo.setUserInfo({
       name: formValues.title,
       job: formValues.description,
     });
+
+    //setting/updating the user info to the server -- need to do this so server can update user info
 
     profileEditPopup.close();
     const formName = profileEditPopup.getForm().getAttribute("name");
@@ -60,22 +90,31 @@ document.querySelector("#profile-edit-button").addEventListener("click", () => {
 });
 
 /* ------------------------------------------------- */
-/*                 Add Card/Image Form 
+/*                 Adding Cards  
 /* ------------------------------------------------- */
 const addCardFormPopup = new PopupWithForm(
   "#profile-add-modal",
   (formValues) => {
-    const cardTitle = formValues.title;
-    const cardLink = formValues.link;
+    const cardData = {
+      name: formValues.title,
+      link: formValues.link,
+    };
 
-    const cardData = { name: cardTitle, link: cardLink };
+    api
+      .addCard(cardData)
+      .then((cardData) => {
+        //console.log("Card added:", cardData);
+        section.renderer(cardData);
+      })
+      .catch((error) => {
+        console.error("Error adding card:", error);
+      });
 
     const formName = addCardFormPopup.getForm().getAttribute("name");
     const validator = formValidators[formName];
 
-    section.renderer(cardData);
     addCardFormPopup.close();
-    validator.disableButton(); //disable create button again after submission
+    validator.disableButton();
   }
 );
 
@@ -91,21 +130,59 @@ imagePopup.setEventListeners();
 function handleImageClick(link, name) {
   imagePopup.open({ name, link });
 }
+
 /* ------------------------------------------------- */
-/*                 Render Cards/Image 
+/*                 Rendering Cards 
 /* ------------------------------------------------- */
 function createCard(item) {
-  const cardElement = new Card(item, "#card-form", handleImageClick);
+  //console.log("Item data:", item);
+  const cardElement = new Card(
+    item,
+    "#card-form",
+    handleImageClick,
+    handleDeleteClick,
+    confirmPopup
+  );
   return cardElement.createCard();
 }
-const renderer = (cardData) => {
-  const cardElement = createCard(cardData);
-  section.addItem(cardElement);
-};
 
-const section = new Section({ items: initialCards, renderer }, ".card__list");
-//console.log(initialCards);
-section.renderItems();
+const confirmPopup = new PopupConfirmation("#delete-confirm-modal");
+
+function handleDeleteClick(cardId, cardElement) {
+  console.log("Deleting card with ID:", cardId);
+  api
+    .removeCard(cardId)
+    .then(() => {
+      console.log("Card successfully deleted from server");
+      cardElement.remove();
+      confirmPopup.close();
+      console.log("Popup should close now");
+    })
+    .catch((err) => console.error("Failed to delete card:", err));
+}
+
+confirmPopup.setSubmitAction(() => {
+  console.log("Yes button clicked - confirming delete");
+  handleDeleteClick(confirmPopup.cardId, confirmPopup.cardElement);
+});
+
+let section;
+api
+  .getInitialCards()
+  .then((initialCards) => {
+    const renderer = (cardData) => {
+      const cardElement = createCard(cardData);
+      section.addItem(cardElement);
+    };
+
+    section = new Section({ items: initialCards, renderer }, ".card__list");
+    section.renderItems();
+    console.log("Cards:", initialCards);
+  })
+  .catch((error) => {
+    console.error("Error fetching cards:", error);
+  });
+
 /* ------------------------------------------------- */
 /*                     Form Validation
 /* ------------------------------------------------- */

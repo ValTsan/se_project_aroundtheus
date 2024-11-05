@@ -157,6 +157,23 @@
   z-index: 1000;
 }
 
+.modal__container_delete {
+  max-height: 181px;
+  width: 100%;
+  max-width: 430px;
+  min-height: auto;
+}
+
+.modal__heading-delete {
+  padding-bottom: 38px;
+}
+
+.modal__button-delete {
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
 @media screen and (max-width: 770px) and (min-width: 661px) {
   .modal__preview-image {
     height: auto;
