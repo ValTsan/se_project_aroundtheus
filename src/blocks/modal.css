@@ -6,7 +6,7 @@
   bottom: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,6 +172,11 @@
   margin: 0;
   text-align: center;
   width: 100%;
+  margin-top: 35px;
+}
+
+.modal__container_avatar {
+  min-height: 236px;
 }
 
 @media screen and (max-width: 770px) and (min-width: 661px) {

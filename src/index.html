@@ -21,11 +21,19 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img
-            src="<%=require('./images/Avatar.png')%>"
-            alt="Jacques Cousteau"
-            class="profile__image"
-          />
+          <div class="profile__image-container">
+            <img
+              src="<%=require('./images/Avatar.png')%>"
+              alt="Jacques Cousteau"
+              class="profile__image"
+            />
+
+            <img
+              src="<%=require('./images/EditProfile.svg')%>"
+              alt="Edit Icon"
+              class="profile__edit-icon"
+            />
+          </div>
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
             <button
@@ -143,6 +151,35 @@
         >
           Yes
         </button>
+      </div>
+    </div>
+
+    <div class="modal" id="update-avatar-modal">
+      <div class="modal__overlay"></div>
+      <div class="modal__container modal__container_avatar">
+        <button class="modal__close" id="close-modal-button"></button>
+        <h2 class="modal__heading">Change profile picture</h2>
+        <form
+          class="modal__form"
+          id="update-avatar-form"
+          name="update-avatar-form"
+        >
+          <input
+            type="url"
+            required
+            class="modal__input"
+            id="avatar-link-input"
+            name="avatarUrl"
+            placeholder="https://somewebsite.com/someimage.jpg"
+          />
+          <span class="modal__error" id="avatar-link-input-error"></span>
+          <button
+            class="modal__button modal__button-delete"
+            id="confirmation-modal-button"
+          >
+            Save
+          </button>
+        </form>
       </div>
     </div>
 

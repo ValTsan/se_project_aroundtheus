@@ -22,8 +22,6 @@ const api = new Api({
 
 console.log("Before API Call");
 
-//api.removeCard("6722c929c26271001a13b2ce").then((res) => console.log(res));
-
 /* ------------------------------------------------- */
 /*                  Card Template 
 /* ------------------------------------------------- */
@@ -38,14 +36,98 @@ const cardData = {
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   jobSelector: ".profile__description",
+  avatarSelector: ".profile__image",
 });
 
 api.getUserInfo().then((userData) => {
   //console.log("User Data from API:", userData);
+  console.log("Setting avatar to:", userData.avatar);
+  //console.log("User Data from API:", userData);
   userInfo.setUserInfo({
     name: userData.name,
     job: userData.about,
+    avatar: userData.avatar,
   });
+});
+
+/* ------------------------------------------------- */
+/*                     Form Validation
+/* ------------------------------------------------- */
+const formValidators = {};
+
+const enableValidation = (settings) => {
+  const formList = Array.from(document.querySelectorAll(settings.formSelector));
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(settings, formElement);
+    const formName = formElement.getAttribute("name");
+
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(settings);
+
+// /* ------------------------------------------------- */
+// /*                 Profile Avatar
+/* ------------------------------------------------- */
+const handleAvatarFormSubmit = (formData) => {
+  const newAvatarUrl = formData.avatar;
+
+  api
+    .updateAvatar(newAvatarUrl)
+    .then((userData) => {
+      console.log("Avatar updated on server:", userData.avatar);
+      //const profileImage = document.querySelector(".profile__image");
+      userInfo.setUserAvatar(userData.avatar);
+      //profileImage.src = newAvatarUrl;
+      //userInfo.setUserAvatar(newAvatarUrl);
+
+      profileEditAvatar.close();
+    })
+    .catch((error) => {
+      console.error("Error updating avatar:", error);
+    });
+};
+
+const profileEditAvatar = new PopupWithForm(
+  "#update-avatar-modal",
+  handleAvatarFormSubmit,
+  (formValues) => {
+    const avatarUrl = formValues.avatar;
+    return api
+      .updateAvatar(avatarUrl)
+      .then((userData) => {
+        console.log("Avatar URL:", userData.avatar);
+        userInfo.setUserAvatar(userData.avatar);
+        profileEditAvatar.close();
+        validator.resetValidation();
+      })
+      .catch((err) => {
+        console.error(`Error Submitting Form: ${err}`);
+      });
+  }
+);
+
+const profileEditAvatarButton = document.querySelector(".profile__edit-icon");
+
+const formName = profileEditAvatar.getForm().getAttribute("name");
+console.log("Form Element:", formName);
+
+const validator = formValidators[formName];
+if (validator) {
+  validator.disableButton();
+} else {
+  console.error(`No validator found for form "${formName}"`);
+}
+
+profileEditAvatarButton.addEventListener("click", () => {
+  profileEditAvatar.open();
+  profileEditAvatar.setEventListeners();
+
+  if (validator) {
+    validator.resetValidation();
+  }
 });
 
 // /* ------------------------------------------------- */
@@ -56,7 +138,7 @@ const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
     api.getUserInfo().then((userData) => {
-      //console.log("User Data from API:", userData);
+      console.log("User Data from API:", userData);
       userInfo.setUserInfo({
         name: userData.name,
         job: userData.about,
@@ -67,7 +149,20 @@ const profileEditPopup = new PopupWithForm(
       job: formValues.description,
     });
 
-    //setting/updating the user info to the server -- need to do this so server can update user info
+    api
+      .setUserInfo({
+        name: formValues.title,
+        about: formValues.description,
+      })
+      .then((data) => {
+        userInfo.setUserInfo({
+          name: data.name,
+          job: data.about,
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+      });
 
     profileEditPopup.close();
     const formName = profileEditPopup.getForm().getAttribute("name");
@@ -103,7 +198,7 @@ const addCardFormPopup = new PopupWithForm(
     api
       .addCard(cardData)
       .then((cardData) => {
-        //console.log("Card added:", cardData);
+        console.log("Card added:", cardData);
         section.renderer(cardData);
       })
       .catch((error) => {
@@ -127,10 +222,6 @@ document.querySelector(".profile__add-button").addEventListener("click", () => {
 const imagePopup = new PopupWithImage("#preview-modal");
 imagePopup.setEventListeners();
 
-function handleImageClick(link, name) {
-  imagePopup.open({ name, link });
-}
-
 /* ------------------------------------------------- */
 /*                 Rendering Cards 
 /* ------------------------------------------------- */
@@ -141,12 +232,20 @@ function createCard(item) {
     "#card-form",
     handleImageClick,
     handleDeleteClick,
-    confirmPopup
+    confirmPopup,
+    handleLikeCard,
+    handleUnlikeCard
   );
+
   return cardElement.createCard();
 }
 
 const confirmPopup = new PopupConfirmation("#delete-confirm-modal");
+
+function handleImageClick(link, name) {
+  //console.log("Preview modal triggered for:", link, name);
+  imagePopup.open({ name, link });
+}
 
 function handleDeleteClick(cardId, cardElement) {
   console.log("Deleting card with ID:", cardId);
@@ -166,10 +265,32 @@ confirmPopup.setSubmitAction(() => {
   handleDeleteClick(confirmPopup.cardId, confirmPopup.cardElement);
 });
 
+function handleLikeCard(cardId, likeButton) {
+  const isLiked = likeButton.classList.contains("card__like-button_active");
+  const apiCall = isLiked ? api.dislikeCard(cardId) : api.likeCard(cardId);
+  console.log(
+    `Attempting to ${isLiked ? "remove" : "add"} like for card ID: ${cardId}`
+  );
+
+  apiCall
+    .then((updatedData) => {
+      console.log("Server responded successfully:", updatedData);
+      likeButton.classList.toggle("card__like-button_active");
+    })
+    .catch((err) => {
+      console.error(`Error ${isLiked ? "removing" : "adding"} like:`, err);
+    });
+}
+
+function handleUnlikeCard(cardId) {
+  return api.dislikeCard(cardId);
+}
+
 let section;
 api
   .getInitialCards()
   .then((initialCards) => {
+    //console.log("Cards with like data:", initialCards);
     const renderer = (cardData) => {
       const cardElement = createCard(cardData);
       section.addItem(cardElement);
@@ -182,21 +303,3 @@ api
   .catch((error) => {
     console.error("Error fetching cards:", error);
   });
-
-/* ------------------------------------------------- */
-/*                     Form Validation
-/* ------------------------------------------------- */
-const formValidators = {};
-
-const enableValidation = (settings) => {
-  const formList = Array.from(document.querySelectorAll(settings.formSelector));
-  formList.forEach((formElement) => {
-    const validator = new FormValidator(settings, formElement);
-    const formName = formElement.getAttribute("name");
-
-    formValidators[formName] = validator;
-    validator.enableValidation();
-  });
-};
-
-enableValidation(settings);

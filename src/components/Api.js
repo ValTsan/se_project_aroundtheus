@@ -15,7 +15,11 @@ export default class Api {
   }
 
   _request(url, options = {}) {
-    options.headers = { ...this._headers, ...options.headers };
+    options.headers = {
+      "Content-Type": "application/json",
+      ...this._headers,
+      ...options.headers,
+    };
 
     return fetch(url, options).then(this._handleResponse);
   }
@@ -37,6 +41,7 @@ export default class Api {
   }
 
   setUserInfo({ name, about }) {
+    console.log(JSON.stringify({ name: name, about: about }));
     return this._request(`${this._baseUrl}/users/me`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -59,11 +64,11 @@ export default class Api {
   removeCard(cardId) {
     return this._request(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      //body: JSON.stringify({}),
     });
   }
 
   likeCard(cardId) {
+    console.log("Card ID from likeCard Api.js card", cardId);
     return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
     });
@@ -75,40 +80,25 @@ export default class Api {
     });
   }
 
+  updateAvatar(avatarUrl) {
+    console.log(JSON.stringify(avatarUrl));
+    return this._request(`${this._baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        avatar: avatarUrl,
+      }),
+    });
+  }
+
   // other methods for working with the API
 }
 
 //to do :
 
-//delete button == priority after clicking yes event listners? the logic of deleting the cards ==NOT WORKING
-//setting/updating the user info to the server
-//like button
-//edit profile pic, form to edit profile pic, api to edit profile
-//edit and add cards
 //check what reviewer wants
+//edit profile pic, form to edit profile pic, api to edit profile
 //checklist, pull code and review code before submitting
-//new forms for editing/deleting pic and cards
-//getAppInfo() == promise.all get user info get card list in one promise
 
-//user info - GET https://around-api.en.tripleten-services.com/v1/users/me
-//cards from server - GET https://around-api.en.tripleten-services.com/v1/cards
-//edit profile - PATCH https://around-api.en.tripleten-services.com/v1/users/me
-//adding new card - POST https://around-api.en.tripleten-services.com/v1/cards
-//delete a card - DELETE https://around-api.en.tripleten-services.com/v1/cards/cardId
-//result delete card -DELETE https://around-api.en.tripleten-services.com/v1/cards/5d1f0611d321eb4bdcd707dd
-//likes - PUT https://around-api.en.tripleten-services.com/v1/cards/cardId/likes
-//removing likes- DELETE https://around-api.en.tripleten-services.com/v1/cards/cardId/likes
 //updating profile pic - PATCH https://around-api.en.tripleten-services.com/v1/users/me/avatar
 
-// User routes
-
-// GET /users/me – Get the current user’s info
-// PATCH /users/me – Update your profile information
 // PATCH /users/me/avatar – Update avatar
-// Card routes
-
-// GET /cards – Get all cards
-// POST /cards – Create a card
-// DELETE /cards/:cardId – Delete a card
-// PUT /cards/:cardId/likes – Like a card
-// DELETE /cards/:cardId/likes – Dislike a card

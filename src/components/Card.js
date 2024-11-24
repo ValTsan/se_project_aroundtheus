@@ -1,19 +1,23 @@
 class Card {
   constructor(
-    { name, link, _id },
+    { name, link, _id, isLiked },
     cardSelector,
     handleImageClick,
     handleDeleteClick,
-    confirmPopup
+    confirmPopup,
+    handleLikeCard,
+    handleUnlikeCard
   ) {
     this._name = name;
     this._link = link;
     this._id = _id;
-    //console.log("Card ID: Constructor parameter:", this._id);
+    this._isLiked = isLiked;
     this._cardSelector = cardSelector;
     this._confirmPopup = confirmPopup;
     this._handleImageClick = handleImageClick;
     this._handleDeleteClick = handleDeleteClick;
+    this._handleLikeCard = handleLikeCard;
+    this._handleUnlikeCard = handleUnlikeCard;
   }
 
   _getID() {
@@ -35,58 +39,62 @@ class Card {
     this._cardImage = this._element.querySelector(".card__image");
     this._trashButton = this._element.querySelector(".card__delete-button");
 
-    if (this._likeButton) {
-      this._likeButton.addEventListener("click", () => {
-        this._handleLikeButton();
-      });
+    if (this._isLiked) {
+      this._likeButton.classList.add("card__like-button_active");
     }
 
-    if (this._cardImage) {
-      this._cardImage.addEventListener("click", () => {
-        this._handleImageClick(this._link, this._name);
+    if (this._likeButton) {
+      this._likeButton.addEventListener("click", () => {
+        this._handleLikeCard(this._getID(), this._likeButton);
       });
     }
 
     if (this._trashButton) {
       this._trashButton.addEventListener("click", () => {
         const cardId = this._getID();
-        console.log("Opening confirm popup for ID:", cardId);
-        console.log("Card element:", this._element);
-        this._confirmPopup.open(
-          (this._id, this._element)
-
-          // => this._handleDeleteButton()
-        );
+        console.log("Trash Button: Opening confirm popup for ID:", cardId);
+        console.log("Trash Button: Card element:", this._element);
+        this._confirmPopup.open(this._id, this._element);
       });
     }
   }
 
-  _handleLikeButton() {
-    this._likeButton.classList.toggle("card__like-button_active");
+  _handleLikeCard() {
+    console.log(`Liking card with ID: ${this._getID}`);
+    api
+      .likeCard(this._getID())
+      .then(() => this._likeButton.classList.add("card__like-button_active"));
+    api
+      .getCardById(this._id)
+      .then((updatedCardData) => {
+        console.log("Fetched updated card data:", updatedCardData);
+      })
+      .catch((err) => console.error("Error liking card:", err));
+  }
+
+  _handleUnlikeCard() {
+    console.log(`Unliking card with ID: ${this._getID}`);
+    api
+      .dislikeCard(this._getID())
+      .then(() => this._likeButton.classList.remove("card__like-button_active"))
+      .catch((err) => console.error("Error unliking card:", err));
   }
 
   _handleDeleteButton() {
-    const cardId = this._getID();
-    console.log("Deleting Card ID:", cardId);
+    console.log("Deleting Card ID:", this._getID());
     this._handleDeleteClick(this._getID(), this._element);
-    //this._handleDeleteClick(this.getID, this._element);
-    // this._api
-    //   .removeCard(this.getID())
-    //   .then(() => {
-    // this._element.remove();
-    // this._element = null;
-    // })
-    //.catch((err) => console.error("Error deleting card:", err));
   }
 
   createCard() {
     this._element = this._getTemplate();
     this._element.querySelector(".card__title").textContent = this._name;
     const cardImage = this._element.querySelector(".card__image");
+    cardImage.addEventListener("click", () => {
+      this._handleImageClick(this._link, this._name);
+    });
 
     cardImage.src = this._link;
     cardImage.alt = this._name;
-
     this._setEventListeners();
 
     return this._element;
