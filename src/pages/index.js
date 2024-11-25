@@ -40,8 +40,7 @@ const userInfo = new UserInfo({
 });
 
 api.getUserInfo().then((userData) => {
-  //console.log("User Data from API:", userData);
-  console.log("Setting avatar to:", userData.avatar);
+  //console.log("Setting avatar to:", userData.avatar);
   //console.log("User Data from API:", userData);
   userInfo.setUserInfo({
     name: userData.name,
@@ -72,17 +71,13 @@ enableValidation(settings);
 // /*                 Profile Avatar
 /* ------------------------------------------------- */
 const handleAvatarFormSubmit = (formData) => {
-  const newAvatarUrl = formData.avatar;
+  const newAvatarUrl = formData.avatarUrl;
 
-  api
+  return api
     .updateAvatar(newAvatarUrl)
     .then((userData) => {
       console.log("Avatar updated on server:", userData.avatar);
-      //const profileImage = document.querySelector(".profile__image");
       userInfo.setUserAvatar(userData.avatar);
-      //profileImage.src = newAvatarUrl;
-      //userInfo.setUserAvatar(newAvatarUrl);
-
       profileEditAvatar.close();
     })
     .catch((error) => {
@@ -94,8 +89,9 @@ const profileEditAvatar = new PopupWithForm(
   "#update-avatar-modal",
   handleAvatarFormSubmit,
   (formValues) => {
+    profileEditAvatar.renderLoading(true);
     const avatarUrl = formValues.avatar;
-    return api
+    api
       .updateAvatar(avatarUrl)
       .then((userData) => {
         console.log("Avatar URL:", userData.avatar);
@@ -105,6 +101,10 @@ const profileEditAvatar = new PopupWithForm(
       })
       .catch((err) => {
         console.error(`Error Submitting Form: ${err}`);
+      })
+      .finally(() => {
+        console.log("Resetting button text");
+        profileEditAvatar.renderLoading(false);
       });
   }
 );
@@ -112,7 +112,7 @@ const profileEditAvatar = new PopupWithForm(
 const profileEditAvatarButton = document.querySelector(".profile__edit-icon");
 
 const formName = profileEditAvatar.getForm().getAttribute("name");
-console.log("Form Element:", formName);
+//console.log("Form Element:", formName);
 
 const validator = formValidators[formName];
 if (validator) {
@@ -121,9 +121,10 @@ if (validator) {
   console.error(`No validator found for form "${formName}"`);
 }
 
+profileEditAvatar.setEventListeners();
+
 profileEditAvatarButton.addEventListener("click", () => {
   profileEditAvatar.open();
-  profileEditAvatar.setEventListeners();
 
   if (validator) {
     validator.resetValidation();
@@ -133,45 +134,37 @@ profileEditAvatarButton.addEventListener("click", () => {
 // /* ------------------------------------------------- */
 // /*                 Profile Edit
 /* ------------------------------------------------- */
-
 const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
-    api.getUserInfo().then((userData) => {
-      console.log("User Data from API:", userData);
-      userInfo.setUserInfo({
-        name: userData.name,
-        job: userData.about,
-      });
-    });
-    userInfo.setUserInfo({
-      name: formValues.title,
-      job: formValues.description,
-    });
-
-    api
+    profileEditPopup.renderLoading(true);
+    return api
       .setUserInfo({
         name: formValues.title,
         about: formValues.description,
       })
       .then((data) => {
-        userInfo.setUserInfo({
-          name: data.name,
-          job: data.about,
-        });
+        userInfo.setUserAvatar(data.avatar);
+
+        const formName = profileEditPopup.getForm().getAttribute("name");
+        const validator = formValidators[formName];
+        validator.disableButton();
+        profileEditPopup.close();
       })
       .catch((error) => {
         console.error("Error updating profile:", error);
+      })
+      .finally(() => {
+        console.log("Resetting button text");
+        profileEditPopup.renderLoading(false);
       });
-
-    profileEditPopup.close();
-    const formName = profileEditPopup.getForm().getAttribute("name");
-    const validator = formValidators[formName];
-    validator.disableButton();
   }
 );
+
+profileEditPopup.setEventListeners();
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
   const { name, job } = userInfo.getUserInfo();
+  //console.log("Current user info:", { name, job });
 
   profileEditPopup.setInputValues({
     title: name,
@@ -195,21 +188,26 @@ const addCardFormPopup = new PopupWithForm(
       link: formValues.link,
     };
 
-    api
+    addCardFormPopup.renderLoading(true, "Creating...");
+
+    return api
       .addCard(cardData)
       .then((cardData) => {
-        console.log("Card added:", cardData);
-        section.renderer(cardData);
+        console.log("Adding new card:", cardData);
+        const cardElement = createCard(cardData);
+        section.addItem(cardElement);
+        addCardFormPopup.close();
+
+        const formName = addCardFormPopup.getForm().getAttribute("name");
+        const validator = formValidators[formName];
+        validator.disableButton();
       })
       .catch((error) => {
         console.error("Error adding card:", error);
+      })
+      .finally(() => {
+        addCardFormPopup.renderLoading(false);
       });
-
-    const formName = addCardFormPopup.getForm().getAttribute("name");
-    const validator = formValidators[formName];
-
-    addCardFormPopup.close();
-    validator.disableButton();
   }
 );
 
@@ -241,6 +239,7 @@ function createCard(item) {
 }
 
 const confirmPopup = new PopupConfirmation("#delete-confirm-modal");
+confirmPopup.setEventListeners();
 
 function handleImageClick(link, name) {
   //console.log("Preview modal triggered for:", link, name);
@@ -249,6 +248,9 @@ function handleImageClick(link, name) {
 
 function handleDeleteClick(cardId, cardElement) {
   console.log("Deleting card with ID:", cardId);
+
+  confirmPopup.renderLoading(true, "Deleting...");
+
   api
     .removeCard(cardId)
     .then(() => {
@@ -257,7 +259,10 @@ function handleDeleteClick(cardId, cardElement) {
       confirmPopup.close();
       console.log("Popup should close now");
     })
-    .catch((err) => console.error("Failed to delete card:", err));
+    .catch((err) => console.error("Failed to delete card:", err))
+    .finally(() => {
+      confirmPopup.renderLoading(false);
+    });
 }
 
 confirmPopup.setSubmitAction(() => {
@@ -292,6 +297,7 @@ api
   .then((initialCards) => {
     //console.log("Cards with like data:", initialCards);
     const renderer = (cardData) => {
+      //console.log("Rendering card:", cardData);
       const cardElement = createCard(cardData);
       section.addItem(cardElement);
     };

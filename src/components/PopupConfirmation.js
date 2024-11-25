@@ -6,6 +6,9 @@ export default class PopupConfirmation extends Popup {
     this._handleConfirmation = handleConfirmation;
     this._handleFormSubmit = handleFormSubmit;
     this._confirmButton = document.querySelector("#confirmation-modal-button");
+    this._submitButton = this._popupElement.querySelector(".modal__button");
+    //console.log("Submit button:", this._submitButton);
+    this._defaultSubmitBtnText = this._submitButton.textContent;
     this._setEventListeners();
   }
 
@@ -38,5 +41,14 @@ export default class PopupConfirmation extends Popup {
       if (this._handleFormSubmit) this._handleFormSubmit();
       this.close();
     });
+  }
+
+  renderLoading(isLoading, loadingText = "Saving...") {
+    console.log("renderLoading called. isLoading:", isLoading);
+    if (isLoading) {
+      this._submitButton.textContent = loadingText;
+    } else {
+      this._submitButton.textContent = this._defaultSubmitBtnText;
+    }
   }
 }

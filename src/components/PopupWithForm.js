@@ -6,7 +6,9 @@ export default class PopupWithForm extends Popup {
     this._handleFormSubmit = handleFormSubmit;
     this._popupForm = this._popupElement.querySelector(".modal__form");
     this._inputList = this._popupForm.querySelectorAll(".modal__input");
-    //this._formValidator = formValidator;
+    this._submitButton = this._popupForm.querySelector(".modal__button");
+    //console.log("Submit button:", this._submitButton);
+    this._defaultSubmitBtnText = this._submitButton.textContent;
     this.setEventListeners();
   }
 
@@ -31,11 +33,40 @@ export default class PopupWithForm extends Popup {
   setEventListeners() {
     this._popupForm.addEventListener("submit", (evt) => {
       evt.preventDefault();
-      this._handleFormSubmit(this._getInputValues());
-      this._popupForm.reset();
-      this.close();
+
+      console.log(
+        "Button text before renderLoading:",
+        this._submitButton.textContent
+      );
+
+      this.renderLoading(true);
+      console.log(
+        "Button text after renderLoading:",
+        this._submitButton.textContent
+      );
+
+      this._handleFormSubmit(this._getInputValues())
+        .then(() => {
+          this.close();
+        })
+        .catch((error) => {
+          console.error("Error during form submission:", error);
+        })
+        .finally(() => {
+          console.log("Resetting button text in finally block...");
+          this.renderLoading(false);
+        });
     });
 
     super.setEventListeners();
+  }
+
+  renderLoading(isLoading, loadingText = "Saving...") {
+    console.log("renderLoading called. isLoading:", isLoading);
+    if (isLoading) {
+      this._submitButton.textContent = loadingText;
+    } else {
+      this._submitButton.textContent = this._defaultSubmitBtnText;
+    }
   }
 }

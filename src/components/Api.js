@@ -52,6 +52,7 @@ export default class Api {
   }
 
   addCard({ name, link }) {
+    console.log("addCard called with:", { name, link });
     return this._request(`${this._baseUrl}/cards`, {
       method: "POST",
       body: JSON.stringify({
@@ -89,16 +90,4 @@ export default class Api {
       }),
     });
   }
-
-  // other methods for working with the API
 }
-
-//to do :
-
-//check what reviewer wants
-//edit profile pic, form to edit profile pic, api to edit profile
-//checklist, pull code and review code before submitting
-
-//updating profile pic - PATCH https://around-api.en.tripleten-services.com/v1/users/me/avatar
-
-// PATCH /users/me/avatar – Update avatar
