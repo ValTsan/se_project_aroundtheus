@@ -39,15 +39,21 @@ const userInfo = new UserInfo({
   avatarSelector: ".profile__image",
 });
 
-api.getUserInfo().then((userData) => {
-  //console.log("Setting avatar to:", userData.avatar);
-  //console.log("User Data from API:", userData);
-  userInfo.setUserInfo({
-    name: userData.name,
-    job: userData.about,
-    avatar: userData.avatar,
+api
+  .getUserInfo()
+  .then((userData) => {
+    console.log("Setting avatar to:", userData.avatar);
+    console.log("User Data from API:", userData);
+
+    userInfo.setUserInfo({
+      name: userData.name,
+      job: userData.about,
+      avatar: userData.avatar,
+    });
+  })
+  .catch((error) => {
+    console.error("Error setting userInfo:", error);
   });
-});
 
 /* ------------------------------------------------- */
 /*                     Form Validation
@@ -73,16 +79,10 @@ enableValidation(settings);
 const handleAvatarFormSubmit = (formData) => {
   const newAvatarUrl = formData.avatarUrl;
 
-  return api
-    .updateAvatar(newAvatarUrl)
-    .then((userData) => {
-      console.log("Avatar updated on server:", userData.avatar);
-      userInfo.setUserAvatar(userData.avatar);
-      profileEditAvatar.close();
-    })
-    .catch((error) => {
-      console.error("Error updating avatar:", error);
-    });
+  return api.updateAvatar(newAvatarUrl).then((userData) => {
+    console.log("Avatar updated on server:", userData.avatar);
+    userInfo.setUserAvatar(userData.avatar);
+  });
 };
 
 const profileEditAvatar = new PopupWithForm(
@@ -97,38 +97,19 @@ const profileEditAvatar = new PopupWithForm(
         console.log("Avatar URL:", userData.avatar);
         userInfo.setUserAvatar(userData.avatar);
         profileEditAvatar.close();
-        validator.resetValidation();
       })
       .catch((err) => {
         console.error(`Error Submitting Form: ${err}`);
-      })
-      .finally(() => {
-        console.log("Resetting button text");
-        profileEditAvatar.renderLoading(false);
       });
   }
 );
 
 const profileEditAvatarButton = document.querySelector(".profile__edit-icon");
 
-const formName = profileEditAvatar.getForm().getAttribute("name");
-//console.log("Form Element:", formName);
-
-const validator = formValidators[formName];
-if (validator) {
-  validator.disableButton();
-} else {
-  console.error(`No validator found for form "${formName}"`);
-}
-
 profileEditAvatar.setEventListeners();
 
 profileEditAvatarButton.addEventListener("click", () => {
   profileEditAvatar.open();
-
-  if (validator) {
-    validator.resetValidation();
-  }
 });
 
 // /* ------------------------------------------------- */
@@ -153,10 +134,6 @@ const profileEditPopup = new PopupWithForm(
       })
       .catch((error) => {
         console.error("Error updating profile:", error);
-      })
-      .finally(() => {
-        console.log("Resetting button text");
-        profileEditPopup.renderLoading(false);
       });
   }
 );
@@ -164,7 +141,6 @@ const profileEditPopup = new PopupWithForm(
 profileEditPopup.setEventListeners();
 document.querySelector("#profile-edit-button").addEventListener("click", () => {
   const { name, job } = userInfo.getUserInfo();
-  //console.log("Current user info:", { name, job });
 
   profileEditPopup.setInputValues({
     title: name,
@@ -196,6 +172,10 @@ const addCardFormPopup = new PopupWithForm(
         console.log("Adding new card:", cardData);
         const cardElement = createCard(cardData);
         section.addItem(cardElement);
+
+        const formElement = addCardFormPopup.getForm();
+        formElement.reset();
+
         addCardFormPopup.close();
 
         const formName = addCardFormPopup.getForm().getAttribute("name");
@@ -204,9 +184,6 @@ const addCardFormPopup = new PopupWithForm(
       })
       .catch((error) => {
         console.error("Error adding card:", error);
-      })
-      .finally(() => {
-        addCardFormPopup.renderLoading(false);
       });
   }
 );
@@ -224,7 +201,6 @@ imagePopup.setEventListeners();
 /*                 Rendering Cards 
 /* ------------------------------------------------- */
 function createCard(item) {
-  //console.log("Item data:", item);
   const cardElement = new Card(
     item,
     "#card-form",
@@ -242,7 +218,6 @@ const confirmPopup = new PopupConfirmation("#delete-confirm-modal");
 confirmPopup.setEventListeners();
 
 function handleImageClick(link, name) {
-  //console.log("Preview modal triggered for:", link, name);
   imagePopup.open({ name, link });
 }
 
@@ -270,17 +245,15 @@ confirmPopup.setSubmitAction(() => {
   handleDeleteClick(confirmPopup.cardId, confirmPopup.cardElement);
 });
 
-function handleLikeCard(cardId, likeButton) {
-  const isLiked = likeButton.classList.contains("card__like-button_active");
-  const apiCall = isLiked ? api.dislikeCard(cardId) : api.likeCard(cardId);
-  console.log(
-    `Attempting to ${isLiked ? "remove" : "add"} like for card ID: ${cardId}`
-  );
+function handleLikeCard(card) {
+  const apiCall = card.getIsLiked()
+    ? api.dislikeCard(card._getId())
+    : api.likeCard(card._getId());
 
   apiCall
     .then((updatedData) => {
       console.log("Server responded successfully:", updatedData);
-      likeButton.classList.toggle("card__like-button_active");
+      //cardInstance.toggleLike();
     })
     .catch((err) => {
       console.error(`Error ${isLiked ? "removing" : "adding"} like:`, err);
@@ -295,9 +268,7 @@ let section;
 api
   .getInitialCards()
   .then((initialCards) => {
-    //console.log("Cards with like data:", initialCards);
     const renderer = (cardData) => {
-      //console.log("Rendering card:", cardData);
       const cardElement = createCard(cardData);
       section.addItem(cardElement);
     };

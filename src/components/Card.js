@@ -12,6 +12,7 @@ class Card {
     this._link = link;
     this._id = _id;
     this._isLiked = isLiked;
+    //console.log("Constructor isLiked:", isLiked);
     this._cardSelector = cardSelector;
     this._confirmPopup = confirmPopup;
     this._handleImageClick = handleImageClick;
@@ -25,6 +26,10 @@ class Card {
     return this._id;
   }
 
+  getIsLiked() {
+    return this._isLiked;
+  }
+
   _getTemplate() {
     const cardElement = document
       .querySelector(this._cardSelector)
@@ -34,10 +39,25 @@ class Card {
     return cardElement;
   }
 
+  toggleLike() {
+    console.log("Toggling Like Button:", this._likeButton);
+    if (!this._likeButton) {
+      console.error("Like Button is undefined in toggleLike!");
+      return;
+    }
+    this._likeButton.classList.toggle("card__like-button_active");
+  }
+
   _setEventListeners() {
     this._likeButton = this._element.querySelector(".card__like-button");
     this._cardImage = this._element.querySelector(".card__image");
     this._trashButton = this._element.querySelector(".card__delete-button");
+
+    if (this._cardImage) {
+      this._cardImage.addEventListener("click", () => {
+        this._handleImageClick(this._link, this._name);
+      });
+    }
 
     if (this._isLiked) {
       this._likeButton.classList.add("card__like-button_active");
@@ -45,7 +65,7 @@ class Card {
 
     if (this._likeButton) {
       this._likeButton.addEventListener("click", () => {
-        this._handleLikeCard(this._getID(), this._likeButton);
+        this._handleLikeCard(this);
       });
     }
 
@@ -63,38 +83,34 @@ class Card {
     console.log(`Liking card with ID: ${this._getID}`);
     api
       .likeCard(this._getID())
-      .then(() => this._likeButton.classList.add("card__like-button_active"));
+      .then(() => {
+        this._likeButton.classList.add("card__like-button_active");
+        console.log("Card liked successfully!");
+      })
+      .catch((err) => {
+        console.error(`Error liking card with ID ${this._getID()}:`, err);
+      });
+
     api
-      .getCardById(this._id)
       .then((updatedCardData) => {
         console.log("Fetched updated card data:", updatedCardData);
       })
-      .catch((err) => console.error("Error liking card:", err));
-  }
-
-  _handleUnlikeCard() {
-    console.log(`Unliking card with ID: ${this._getID}`);
-    api
-      .dislikeCard(this._getID())
-      .then(() => this._likeButton.classList.remove("card__like-button_active"))
-      .catch((err) => console.error("Error unliking card:", err));
-  }
-
-  _handleDeleteButton() {
-    console.log("Deleting Card ID:", this._getID());
-    this._handleDeleteClick(this._getID(), this._element);
+      .catch((err) => {
+        console.error(
+          "Error occurred while liking the card or fetching data:",
+          err
+        );
+      });
   }
 
   createCard() {
     this._element = this._getTemplate();
     this._element.querySelector(".card__title").textContent = this._name;
-    const cardImage = this._element.querySelector(".card__image");
-    cardImage.addEventListener("click", () => {
-      this._handleImageClick(this._link, this._name);
-    });
 
+    const cardImage = this._element.querySelector(".card__image");
     cardImage.src = this._link;
     cardImage.alt = this._name;
+
     this._setEventListeners();
 
     return this._element;

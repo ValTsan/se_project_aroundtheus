@@ -7,7 +7,6 @@ export default class PopupConfirmation extends Popup {
     this._handleFormSubmit = handleFormSubmit;
     this._confirmButton = document.querySelector("#confirmation-modal-button");
     this._submitButton = this._popupElement.querySelector(".modal__button");
-    //console.log("Submit button:", this._submitButton);
     this._defaultSubmitBtnText = this._submitButton.textContent;
     this._setEventListeners();
   }
@@ -19,16 +18,10 @@ export default class PopupConfirmation extends Popup {
 
   open(cardId, cardElement) {
     super.open();
-    // console.log("Card ID in Card class:", this._getID());
-    // console.log("Card Element in Card class:", this.element);
     this.cardId = cardId;
     console.log("Opening confirm popup for ID in PopConfirmation.js:");
     this.cardElement = cardElement;
     console.log("Received cardElement in PopConfirmation.js:", cardElement);
-  }
-
-  close() {
-    super.close();
   }
 
   setSubmitAction(action) {
@@ -39,7 +32,6 @@ export default class PopupConfirmation extends Popup {
     super.setEventListeners();
     this._confirmButton.addEventListener("click", () => {
       if (this._handleFormSubmit) this._handleFormSubmit();
-      this.close();
     });
   }
 
