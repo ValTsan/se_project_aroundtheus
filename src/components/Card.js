@@ -71,7 +71,7 @@ class Card {
 
     if (this._trashButton) {
       this._trashButton.addEventListener("click", () => {
-        const cardId = this._getID();
+        const cardId = this.getID();
         console.log("Trash Button: Opening confirm popup for ID:", cardId);
         console.log("Trash Button: Card element:", this._element);
         this._confirmPopup.open(this._id, this._element);
