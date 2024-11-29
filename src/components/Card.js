@@ -21,7 +21,7 @@ class Card {
     this._handleUnlikeCard = handleUnlikeCard;
   }
 
-  _getID() {
+  getID() {
     console.log("Getting ID:", this._id);
     return this._id;
   }

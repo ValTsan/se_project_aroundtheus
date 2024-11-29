@@ -246,14 +246,15 @@ confirmPopup.setSubmitAction(() => {
 });
 
 function handleLikeCard(card) {
-  const apiCall = card.getIsLiked()
-    ? api.dislikeCard(card._getId())
-    : api.likeCard(card._getId());
+  const isLiked = card.getIsLiked();
+  const apiCall = isLiked
+    ? api.dislikeCard(card.getID())
+    : api.likeCard(card.getID());
 
   apiCall
     .then((updatedData) => {
       console.log("Server responded successfully:", updatedData);
-      //cardInstance.toggleLike();
+      card.toggleLike();
     })
     .catch((err) => {
       console.error(`Error ${isLiked ? "removing" : "adding"} like:`, err);
