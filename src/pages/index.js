@@ -87,21 +87,7 @@ const handleAvatarFormSubmit = (formData) => {
 
 const profileEditAvatar = new PopupWithForm(
   "#update-avatar-modal",
-  handleAvatarFormSubmit,
-  (formValues) => {
-    profileEditAvatar.renderLoading(true);
-    const avatarUrl = formValues.avatar;
-    api
-      .updateAvatar(avatarUrl)
-      .then((userData) => {
-        console.log("Avatar URL:", userData.avatar);
-        userInfo.setUserAvatar(userData.avatar);
-        profileEditAvatar.close();
-      })
-      .catch((err) => {
-        console.error(`Error Submitting Form: ${err}`);
-      });
-  }
+  handleAvatarFormSubmit
 );
 
 const profileEditAvatarButton = document.querySelector(".profile__edit-icon");
@@ -118,22 +104,17 @@ profileEditAvatarButton.addEventListener("click", () => {
 const profileEditPopup = new PopupWithForm(
   "#profile-edit-modal",
   (formValues) => {
-    profileEditPopup.renderLoading(true);
     return api
       .setUserInfo({
         name: formValues.title,
         about: formValues.description,
       })
       .then((data) => {
-        userInfo.setUserAvatar(data.avatar);
-
-        const formName = profileEditPopup.getForm().getAttribute("name");
-        const validator = formValidators[formName];
-        validator.disableButton();
-        profileEditPopup.close();
-      })
-      .catch((error) => {
-        console.error("Error updating profile:", error);
+        userInfo.setUserInfo({
+          name: data.name,
+          job: data.about,
+          avatar: data.avatar,
+        });
       });
   }
 );
@@ -148,9 +129,6 @@ document.querySelector("#profile-edit-button").addEventListener("click", () => {
   });
 
   profileEditPopup.open();
-  const formName = profileEditPopup.getForm().getAttribute("name");
-  const validator = formValidators[formName];
-  validator.resetValidation();
 });
 
 /* ------------------------------------------------- */
@@ -178,7 +156,7 @@ const addCardFormPopup = new PopupWithForm(
 
         addCardFormPopup.close();
 
-        const formName = addCardFormPopup.getForm().getAttribute("name");
+        const formName = formElement.getAttribute("name");
         const validator = formValidators[formName];
         validator.disableButton();
       })

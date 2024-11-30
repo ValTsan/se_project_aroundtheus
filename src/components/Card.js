@@ -79,30 +79,6 @@ class Card {
     }
   }
 
-  _handleLikeCard() {
-    console.log(`Liking card with ID: ${this._getID}`);
-    api
-      .likeCard(this._getID())
-      .then(() => {
-        this._likeButton.classList.add("card__like-button_active");
-        console.log("Card liked successfully!");
-      })
-      .catch((err) => {
-        console.error(`Error liking card with ID ${this._getID()}:`, err);
-      });
-
-    api
-      .then((updatedCardData) => {
-        console.log("Fetched updated card data:", updatedCardData);
-      })
-      .catch((err) => {
-        console.error(
-          "Error occurred while liking the card or fetching data:",
-          err
-        );
-      });
-  }
-
   createCard() {
     this._element = this._getTemplate();
     this._element.querySelector(".card__title").textContent = this._name;
