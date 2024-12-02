@@ -42,9 +42,8 @@ const userInfo = new UserInfo({
 api
   .getUserInfo()
   .then((userData) => {
-    console.log("Setting avatar to:", userData.avatar);
-    console.log("User Data from API:", userData);
-
+    // console.log("Setting avatar to:", userData.avatar);
+    // console.log("User Data from API:", userData);
     userInfo.setUserInfo({
       name: userData.name,
       job: userData.about,
@@ -142,28 +141,20 @@ const addCardFormPopup = new PopupWithForm(
       link: formValues.link,
     };
 
-    addCardFormPopup.renderLoading(true, "Creating...");
+    return api.addCard(cardData).then((cardData) => {
+      console.log("Adding new card:", cardData);
+      const cardElement = createCard(cardData);
+      section.addItem(cardElement);
 
-    return api
-      .addCard(cardData)
-      .then((cardData) => {
-        console.log("Adding new card:", cardData);
-        const cardElement = createCard(cardData);
-        section.addItem(cardElement);
+      const formElement = addCardFormPopup.getForm();
+      formElement.reset();
 
-        const formElement = addCardFormPopup.getForm();
-        formElement.reset();
-
-        addCardFormPopup.close();
-
-        const formName = formElement.getAttribute("name");
-        const validator = formValidators[formName];
-        validator.disableButton();
-      })
-      .catch((error) => {
-        console.error("Error adding card:", error);
-      });
-  }
+      const formName = formElement.getAttribute("name");
+      const validator = formValidators[formName];
+      validator.disableButton();
+    });
+  },
+  "Creating..."
 );
 
 document.querySelector(".profile__add-button").addEventListener("click", () => {
@@ -174,6 +165,10 @@ document.querySelector(".profile__add-button").addEventListener("click", () => {
 /* ------------------------------------------------- */
 const imagePopup = new PopupWithImage("#preview-modal");
 imagePopup.setEventListeners();
+
+function handleImageClick(link, name) {
+  imagePopup.open({ name, link });
+}
 
 /* ------------------------------------------------- */
 /*                 Rendering Cards 
@@ -192,57 +187,48 @@ function createCard(item) {
   return cardElement.createCard();
 }
 
+//Handle Delete Card
+function handleDeleteClick(cardId, cardElement) {
+  console.log("Attempting to delete card with ID:", cardId);
+  confirmPopup.renderLoading(true, "Deleting...");
+
+  return api.removeCard(cardId).then(() => {
+    console.log("Card successfully deleted from server", cardId);
+    cardElement.remove();
+    confirmPopup.close();
+  });
+}
+
 const confirmPopup = new PopupConfirmation("#delete-confirm-modal");
 confirmPopup.setEventListeners();
 
-function handleImageClick(link, name) {
-  imagePopup.open({ name, link });
-}
-
-function handleDeleteClick(cardId, cardElement) {
-  console.log("Deleting card with ID:", cardId);
-
-  confirmPopup.renderLoading(true, "Deleting...");
-
-  api
-    .removeCard(cardId)
-    .then(() => {
-      console.log("Card successfully deleted from server");
-      cardElement.remove();
-      confirmPopup.close();
-      console.log("Popup should close now");
-    })
-    .catch((err) => console.error("Failed to delete card:", err))
-    .finally(() => {
-      confirmPopup.renderLoading(false);
-    });
-}
-
 confirmPopup.setSubmitAction(() => {
-  console.log("Yes button clicked - confirming delete");
-  handleDeleteClick(confirmPopup.cardId, confirmPopup.cardElement);
+  console.log(
+    "Yes button clicked - confirming delete",
+    confirmPopup.cardId,
+    confirmPopup.cardElement
+  );
+  return handleDeleteClick(confirmPopup.cardId, confirmPopup.cardElement);
 });
 
+//Handle Like Card
 function handleLikeCard(card) {
   const isLiked = card.getIsLiked();
   const apiCall = isLiked
     ? api.dislikeCard(card.getID())
     : api.likeCard(card.getID());
 
-  apiCall
-    .then((updatedData) => {
-      console.log("Server responded successfully:", updatedData);
-      card.toggleLike();
-    })
-    .catch((err) => {
-      console.error(`Error ${isLiked ? "removing" : "adding"} like:`, err);
-    });
+  apiCall.then((updatedData) => {
+    console.log("Server responded successfully:", updatedData);
+    card.toggleLike();
+  });
 }
 
 function handleUnlikeCard(cardId) {
   return api.dislikeCard(cardId);
 }
 
+//Rendering Cards
 let section;
 api
   .getInitialCards()

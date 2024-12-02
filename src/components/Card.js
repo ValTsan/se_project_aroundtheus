@@ -12,7 +12,6 @@ class Card {
     this._link = link;
     this._id = _id;
     this._isLiked = isLiked;
-    //console.log("Constructor isLiked:", isLiked);
     this._cardSelector = cardSelector;
     this._confirmPopup = confirmPopup;
     this._handleImageClick = handleImageClick;
@@ -22,7 +21,6 @@ class Card {
   }
 
   getID() {
-    console.log("Getting ID:", this._id);
     return this._id;
   }
 
@@ -40,7 +38,6 @@ class Card {
   }
 
   toggleLike() {
-    console.log("Toggling Like Button:", this._likeButton);
     if (!this._likeButton) {
       console.error("Like Button is undefined in toggleLike!");
       return;
@@ -72,8 +69,6 @@ class Card {
     if (this._trashButton) {
       this._trashButton.addEventListener("click", () => {
         const cardId = this.getID();
-        console.log("Trash Button: Opening confirm popup for ID:", cardId);
-        console.log("Trash Button: Card element:", this._element);
         this._confirmPopup.open(this._id, this._element);
       });
     }
