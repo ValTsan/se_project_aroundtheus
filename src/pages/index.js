@@ -180,8 +180,7 @@ function createCard(item) {
     handleImageClick,
     handleDeleteClick,
     confirmPopup,
-    handleLikeCard,
-    handleUnlikeCard
+    handleLikeCard
   );
 
   return cardElement.createCard();
@@ -189,13 +188,8 @@ function createCard(item) {
 
 //Handle Delete Card
 function handleDeleteClick(cardId, cardElement) {
-  console.log("Attempting to delete card with ID:", cardId);
-  confirmPopup.renderLoading(true, "Deleting...");
-
   return api.removeCard(cardId).then(() => {
-    console.log("Card successfully deleted from server", cardId);
     cardElement.remove();
-    confirmPopup.close();
   });
 }
 
@@ -218,14 +212,11 @@ function handleLikeCard(card) {
     ? api.dislikeCard(card.getID())
     : api.likeCard(card.getID());
 
-  apiCall.then((updatedData) => {
-    console.log("Server responded successfully:", updatedData);
-    card.toggleLike();
-  });
-}
-
-function handleUnlikeCard(cardId) {
-  return api.dislikeCard(cardId);
+  apiCall
+    .then(() => {
+      card.toggleLike();
+    })
+    .catch(console.error);
 }
 
 //Rendering Cards

@@ -5,8 +5,7 @@ class Card {
     handleImageClick,
     handleDeleteClick,
     confirmPopup,
-    handleLikeCard,
-    handleUnlikeCard
+    handleLikeCard
   ) {
     this._name = name;
     this._link = link;
@@ -17,7 +16,6 @@ class Card {
     this._handleImageClick = handleImageClick;
     this._handleDeleteClick = handleDeleteClick;
     this._handleLikeCard = handleLikeCard;
-    this._handleUnlikeCard = handleUnlikeCard;
   }
 
   getID() {
