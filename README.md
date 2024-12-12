@@ -39,19 +39,19 @@ Below are some screenshots showcasing the key features of the project:
 
 ### 1280px View
 
-![Home Page 1280px](./images/demo/1280px.png)
+![Home Page 1280px](./src/images/demo/1280px.png)
 
 ### 1039px View
 
-![Gallery Section](./images/demo/1039px.png)
+![Gallery Section](./src/images/demo/1039px.png)
 
 ### 915px View 
 
-![Mobile View](./images/demo/915px.png)
+![Mobile View](./src/images/demo/915px.png)
 
 ### 320px Mobile View
 
-![Mobile View](./images/demo/320px.png)
+![Mobile View](./src/images/demo/320px.png)
 
 ## Demo
 
